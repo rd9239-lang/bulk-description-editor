@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>プライバシーポリシー｜概要欄 一括置換 for YouTube™ Studio</title>
+<style>
+  :root { --text:#1f2328; --muted:#5a626a; --line:#dfe3e8; --accent:#0b57d0; --bg:#ffffff; }
+  @media (prefers-color-scheme: dark) {
+    :root { --text:#e6edf3; --muted:#9aa4ae; --line:#30363d; --accent:#6ea8ff; --bg:#0d1117; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 auto; padding: 40px 20px 80px; max-width: 760px;
+    background: var(--bg); color: var(--text);
+    font-family: "Segoe UI", "Yu Gothic UI", -apple-system, system-ui, sans-serif;
+    font-size: 15px; line-height: 1.8;
+  }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 40px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 15px; margin: 24px 0 8px; }
+  p, li { margin: 0 0 10px; }
+  ul { padding-left: 20px; }
+  .meta { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+  .lead {
+    border-left: 3px solid var(--accent); padding: 10px 14px;
+    background: rgba(11,87,208,.06); border-radius: 0 6px 6px 0;
+  }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; font-size: 14px; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: rgba(127,127,127,.08); font-weight: 600; }
+  code { font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 48px 0; }
+  footer { color: var(--muted); font-size: 13px; margin-top: 40px; }
+  .lang-switch { font-size: 13px; margin-bottom: 24px; }
+  .lang-switch a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<h1>プライバシーポリシー</h1>
+<p class="meta">
+  対象拡張機能：概要欄 一括置換 for YouTube™ Studio（Bulk Description Editor）<br />
+  最終更新日：2026年8月14日
+</p>
+<p class="lang-switch"><a href="#english">English version below →</a></p>
+
+<p class="lead">
+  この拡張機能は、<strong>利用者のデータを外部に一切送信しません。</strong>
+  すべての処理は利用者のブラウザの中だけで完結します。開発者を含め、第三者がデータを受け取ることはありません。
+</p>
+
+<h2>1. アクセスする情報</h2>
+<p>
+  この拡張機能は、<strong>利用者が明示的に操作を実行したときにのみ</strong>、
+  <code>https://studio.youtube.com</code> 上の以下の情報にアクセスします。
+</p>
+<ul>
+  <li>利用者自身のチャンネルの動画一覧（動画IDとタイトル）</li>
+  <li>利用者自身の動画のタイトルおよび概要欄（説明文）の本文</li>
+</ul>
+<p>
+  上記以外のウェブサイトにはアクセスしません。閲覧履歴、Cookie、パスワード、
+  保存された認証情報、他のタブの内容を読み取ることはありません。
+</p>
+
+<h2>2. 端末内に保存する情報</h2>
+<p>以下を <code>chrome.storage.local</code>（利用者の端末内）に保存します。<strong>外部への送信はありません。</strong></p>
+<table>
+  <tr><th>保存するもの</th><th>目的</th></tr>
+  <tr><td>書き換える直前の概要欄の本文</td><td>「取り消し」機能で元に戻すため</td></tr>
+  <tr><td>一度読み取った概要欄の本文</td><td>再度の読み取りを省いて動作を速くするため</td></tr>
+  <tr><td>入力内容や設定（探す文字列など）</td><td>次回起動時に復元するため</td></tr>
+</table>
+
+<h2>3. 保存した情報の削除</h2>
+<ul>
+  <li>読み取った概要欄：作業画面の「読み取り結果を捨てる」ボタン</li>
+  <li>取り消し用の控え：作業画面の「控えを削除する」ボタン</li>
+  <li>すべて：Chrome から拡張機能を削除すると、保存された情報もすべて削除されます</li>
+</ul>
+
+<h2>4. 行わないこと</h2>
+<ul>
+  <li>外部サーバーへの送信、外部APIの呼び出し</li>
+  <li>アクセス解析、行動追跡、広告の配信</li>
+  <li>データの販売、第三者への提供</li>
+  <li>アカウント登録、ログイン、Googleアカウント連携</li>
+  <li>外部から取得したコードの実行（Manifest V3 に従い、すべてパッケージに同梱）</li>
+</ul>
+
+<h2>5. 権限を使う理由</h2>
+<table>
+  <tr><th>権限</th><th>理由</th></tr>
+  <tr><td><code>storage</code></td><td>上記2の情報を端末内に保存するため</td></tr>
+  <tr><td><code>scripting</code></td><td>YouTube Studio のページ上で概要欄を読み取り・書き換えるため</td></tr>
+  <tr><td><code>https://studio.youtube.com/*</code></td><td>動作対象を YouTube Studio のみに限定するため</td></tr>
+</table>
+
+<h2>6. お問い合わせ</h2>
+<p><!-- ▼▼ liuweizhongdao370@gmail.com ▼▼ -->（liuweizhongdao370@gmail.com）</p>
+
+<h2>7. 変更</h2>
+<p>本ポリシーを変更する場合は、本ページの最終更新日を改めます。</p>
+
+<hr />
+
+<h1 id="english">Privacy Policy</h1>
+<p class="meta">
+  Extension: 概要欄 一括置換 for YouTube™ Studio (Bulk Description Editor)<br />
+  Last updated: August 14, 2026
+</p>
+
+<p class="lead">
+  This extension <strong>does not transmit any user data to external servers.</strong>
+  All processing happens entirely within the user's browser. Neither the developer nor
+  any third party receives any data.
+</p>
+
+<h2>1. Information Accessed</h2>
+<p>
+  Only when the user explicitly runs an operation, this extension accesses the following
+  on <code>https://studio.youtube.com</code>:
+</p>
+<ul>
+  <li>The list of videos on the user's own channel (video IDs and titles)</li>
+  <li>The title and description text of the user's own videos</li>
+</ul>
+<p>
+  It does not access any other website. It does not read browsing history, cookies,
+  passwords, saved credentials, or the contents of other tabs.
+</p>
+
+<h2>2. Information Stored Locally</h2>
+<p>
+  The following is stored in <code>chrome.storage.local</code> on the user's own device.
+  <strong>Nothing is sent anywhere.</strong>
+</p>
+<table>
+  <tr><th>Stored</th><th>Purpose</th></tr>
+  <tr><td>The description text as it was immediately before a change</td><td>To power the Undo feature</td></tr>
+  <tr><td>Description text that has already been read</td><td>To avoid re-loading pages and keep previews fast</td></tr>
+  <tr><td>Input values and settings</td><td>To restore them on next launch</td></tr>
+</table>
+
+<h2>3. Deleting Stored Information</h2>
+<ul>
+  <li>Cached descriptions: the "Discard read results" button</li>
+  <li>Undo backup: the "Delete backup" button</li>
+  <li>Everything: removing the extension from Chrome deletes all stored data</li>
+</ul>
+
+<h2>4. What This Extension Does Not Do</h2>
+<ul>
+  <li>Send data to external servers or call external APIs</li>
+  <li>Analytics, tracking, or advertising</li>
+  <li>Sell or share data with third parties</li>
+  <li>Require accounts, logins, or Google account authorization</li>
+  <li>Execute remotely hosted code (all code ships inside the package, per Manifest V3)</li>
+</ul>
+
+<h2>5. Why Each Permission Is Needed</h2>
+<table>
+  <tr><th>Permission</th><th>Reason</th></tr>
+  <tr><td><code>storage</code></td><td>To store the information described in section 2 on the device</td></tr>
+  <tr><td><code>scripting</code></td><td>To read and edit descriptions on YouTube Studio pages</td></tr>
+  <tr><td><code>https://studio.youtube.com/*</code></td><td>To restrict the extension to YouTube Studio only</td></tr>
+</table>
+
+<h2>6. Contact</h2>
+<p><!-- ▼▼ liuweizhongdao370@gmail.com ▼▼ -->(liuweizhongdao370@gmail.com)</p>
+
+<h2>7. Changes</h2>
+<p>If this policy changes, the "last updated" date above will be revised.</p>
+
+<footer>
+  This extension is not affiliated with, endorsed by, or sponsored by YouTube or Google LLC.
+  YouTube is a trademark of Google LLC.
+</footer>
+
+</body>
+</html>
