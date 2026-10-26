@@ -8,6 +8,8 @@ var _focus: Node
 
 func _ready() -> void:
 	target_position = Vector3(0, 0, -2.0)
+	# レイヤー1（物）とレイヤー4（窓など、視線を遮らない調べる対象）
+	collision_mask = 1 | 4
 	enabled = true
 
 func _physics_process(_delta: float) -> void:

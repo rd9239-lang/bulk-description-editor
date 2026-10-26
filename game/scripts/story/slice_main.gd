@@ -334,7 +334,10 @@ func _build_interiors() -> void:
 	_prop("Table", Vector3(55.5, 0.35, 6.5), Vector3(1.2, 0.7, 0.8), Color(0.3, 0.22, 0.15), "", "")
 	_prop("Pamphlet", Vector3(55.3, 0.72, 6.4), Vector3(0.3, 0.02, 0.21), Color(0.85, 0.82, 0.7), CH0, "pamphlet")
 	_prop("Pomade", Vector3(59.4, 0.9, 7.6), Vector3(0.08, 0.1, 0.08), Color(0.2, 0.35, 0.3), CH0, "pomade")
-	_prop("Window", Vector3(55, 1.4, 4.12), Vector3(0.9, 1.2, 0.05), Color(0, 0, 0, 0), CH0, "window_night", &"first_night", &"first_night").get_child(0).visible = false
+	# 窓を調べるための見えない箱。レイヤー4：調べるレイだけが当たり、視線と体は通す
+	var window := _prop("Window", Vector3(55, 1.4, 4.12), Vector3(0.9, 1.2, 0.05), Color(0, 0, 0, 0), CH0, "window_night", &"first_night", &"first_night")
+	window.get_child(0).visible = false
+	window.collision_layer = 4
 	radio = Radio.new()
 	radio.name = "Radio"
 	radio.signal_id = &"sos_a_radio"
@@ -468,13 +471,13 @@ func _show_card(text: String, hold := 2.5) -> void:
 # ---------- 調べる・会話 ----------
 
 func _on_interacted(target: Interactable) -> void:
-	if dialogue.visible or not _is_active(target) or target.dialogue_file == "":
+	if dialogue.visible or _pending != null or not _is_active(target) or target.dialogue_file == "":
 		return
+	_pending = target
 	if target.knock != "":
 		knock.global_position = target.global_position
 		knock.play_rhythm(target.knock)
 		await get_tree().create_timer(1.4).timeout
-	_pending = target
 	player.input_enabled = false
 	dialogue.open(target.dialogue_file, target.dialogue_node)
 

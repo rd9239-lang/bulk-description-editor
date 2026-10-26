@@ -62,3 +62,26 @@ func test_telling_wife_leads_to_confession():
 	await _talk("Wife", 0)
 	assert_eq(main._pending_ending, &"confession")
 	assert_true(main._overlay.visible)
+
+func test_sos_lamp_is_perceived_through_home_window():
+	main.player.global_position = Vector3(55.2, 0.1, 5.0)
+	for i in 3:
+		await get_tree().physics_frame
+	var lamp: Streetlight = main.get_node("Street/LampSOS")
+	var target := lamp.signal_point()
+	main.player.look_at(Vector3(target.x, main.player.global_position.y, target.z))
+	var head: Node3D = main.player.get_node("Head")
+	head.rotation.x = atan2(target.y - head.global_position.y, Vector2(target.x - head.global_position.x, target.z - head.global_position.z).length())
+	for i in 3:
+		await get_tree().physics_frame
+	var obs: SignalObserver = main.player.get_node("SignalObserver")
+	assert_true(obs._perceives(main.player.get_node("Head/Camera3D"), lamp))
+
+func test_double_interact_starts_dialogue_once():
+	main.flow.complete(&"arrive_pier")
+	var starts := [0]
+	main.dialogue.runner.line_changed.connect(func(n): if n.get("text_key") == "d_mother_1": starts[0] += 1)
+	main._on_interacted(main.get_node("Mother"))
+	main._on_interacted(main.get_node("Mother"))
+	await get_tree().create_timer(2.0).timeout
+	assert_eq(starts[0], 1)
