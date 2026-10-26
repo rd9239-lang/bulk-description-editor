@@ -27,11 +27,7 @@ func _initialize() -> void:
 			root.add_child(t)
 			t._current = "%s::%s" % [path.get_file(), name]
 			t.before_each()
-			var r = t.call(name)
-			if r is Object and r.get_class() == "GDScriptFunctionState":
-				await r.completed
-			elif typeof(r) == TYPE_SIGNAL:
-				pass
+			await t.call(name)
 			t.after_each()
 			if t._asserts == 0:
 				t._fail("no assertions ran (script error?)")
