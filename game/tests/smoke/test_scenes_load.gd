@@ -62,3 +62,33 @@ func test_street_dressing_and_house_detail():
 	var body := scene.get_node("Mother").get_node_or_null("Body") as MeshInstance3D
 	assert_true(body != null and not (body.mesh is CapsuleMesh))
 	scene.queue_free()
+
+func test_pier_stands_over_water_with_rock_shore():
+	var scene = load("res://scenes/island_slice.tscn").instantiate()
+	add_child(scene)
+	await get_tree().process_frame
+	var ground: MeshInstance3D = scene.get_node("Ground").get_child(0)
+	var min_x: float = (ground.global_transform * ground.get_aabb()).position.x
+	assert_true(min_x >= -1.5, "ground starts at the shore, got %s" % min_x)
+	var shore := scene.get_node_or_null("Shore") as Node3D
+	assert_true(shore != null)
+	if shore:
+		var mi := shore.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+		assert_eq(mi.mesh.material, MaterialLibrary.material("rock"))
+	assert_true(get_tree().get_nodes_in_group("pier_piles").size() >= 6)
+	scene.queue_free()
+
+func test_photo_textures_are_used():
+	assert_true(MaterialLibrary.material("plank").albedo_texture.resource_path.contains("photo_pine_planks"))
+	assert_true(MaterialLibrary.material("concrete").albedo_texture.resource_path.contains("photo_concrete"))
+	assert_true(MaterialLibrary.material("wood_floor").albedo_texture.resource_path.contains("photo_wood_floor"))
+	assert_true(MaterialLibrary.material("gravel").albedo_texture.resource_path.contains("photo_ground"))
+
+func test_sea_and_harbor_light():
+	var scene = load("res://scenes/island_slice.tscn").instantiate()
+	add_child(scene)
+	await get_tree().process_frame
+	assert_eq((scene.get_node("Sea") as MeshInstance3D).mesh.material, MaterialLibrary.material("sea"))
+	var h := scene.get_node_or_null("Shore/HarborLight") as Streetlight
+	assert_true(h != null and h.is_on)
+	scene.queue_free()

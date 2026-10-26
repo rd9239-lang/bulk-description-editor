@@ -116,21 +116,61 @@ func _box_body(name: String, size: Vector3, pos: Vector3, look: String, parent: 
 	return body
 
 func _build_ground() -> void:
-	_box_body("Ground", Vector3(90, 1, 40), Vector3(30, -0.5, 0), "gravel")
-	_box_body("Road", Vector3(74, 0.02, 4), Vector3(31, 0.01, 0), "asphalt")
-	_box_body("Pier", Vector3(14, 0.3, 3), Vector3(-9, 0.15, 0), "wood_floor")
+	# 陸地は x=-1 の岸まで。その先は海で、桟橋は杭の上に立つ
+	_box_body("Ground", Vector3(76, 1, 40), Vector3(37, -0.5, 0), "gravel")
+	_box_body("Road", Vector3(69, 0.02, 4), Vector3(33.5, 0.01, 0), "asphalt")
+	_box_body("Pier", Vector3(15, 0.3, 3), Vector3(-8.5, 0.15, 0), "wood_floor")
+	_build_shore()
 	var sea := MeshInstance3D.new()
+	sea.name = "Sea"
 	var pm := PlaneMesh.new()
 	pm.size = Vector2(60, 80)
-	var m := StandardMaterial3D.new()
-	m.albedo_color = Color(0.01, 0.02, 0.04)
-	m.roughness = 0.1
-	pm.material = m
+	pm.material = MaterialLibrary.material("sea")
 	sea.mesh = pm
 	sea.position = Vector3(-31, -0.4, 0)
 	add_child(sea)
 	# 桟橋から上がると「到着」
 	_area("PierExit", Vector3(3, 3, 6), Vector3(-1, 1.5, 0), func(): flow.complete(&"arrive_pier"))
+
+## 岩の護岸、桟橋の杭、海に落ちないための見えない柵
+func _build_shore() -> void:
+	var shore := Node3D.new()
+	shore.name = "Shore"
+	add_child(shore)
+	var slope := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = Vector3(3.2, 0.6, 40)
+	bm.material = MaterialLibrary.material("rock")
+	slope.mesh = bm
+	slope.position = Vector3(-1.9, -0.95, 0)
+	slope.rotation.z = deg_to_rad(38)
+	shore.add_child(slope)
+	for x in [-15.0, -11.0, -7.0, -3.0]:
+		for z in [-1.3, 1.3]:
+			var pile := MeshInstance3D.new()
+			var cm := CylinderMesh.new()
+			cm.top_radius = 0.12
+			cm.bottom_radius = 0.14
+			cm.height = 2.4
+			cm.material = MaterialLibrary.material("plank_dark")
+			pile.mesh = cm
+			pile.position = Vector3(x, -1.2, z)
+			pile.add_to_group("pier_piles")
+			shore.add_child(pile)
+	# 桟橋の先の港の灯り（常に点いている）
+	var harbor := Streetlight.new()
+	harbor.name = "HarborLight"
+	harbor.position = Vector3(-5.0, 0.3, -1.4)
+	harbor.rotation_degrees.y = -90
+	harbor.add_child(STREETLIGHT.instantiate())
+	shore.add_child(harbor)
+	var fence := StaticBody3D.new()
+	fence.name = "SeaBarrier"
+	shore.add_child(fence)
+	for b in [[Vector3(0.2, 3, 18.4), Vector3(-1.1, 1.5, 10.8)], [Vector3(0.2, 3, 18.4), Vector3(-1.1, 1.5, -10.8)],
+			[Vector3(15, 3, 0.2), Vector3(-8.5, 1.5, 1.6)], [Vector3(15, 3, 0.2), Vector3(-8.5, 1.5, -1.6)],
+			[Vector3(0.2, 3, 3.4), Vector3(-16.1, 1.5, 0)]]:
+		_col(fence, b[0], b[1])
 
 func _area(name: String, size: Vector3, pos: Vector3, on_enter: Callable) -> void:
 	var a := Area3D.new()

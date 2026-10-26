@@ -72,6 +72,7 @@ func _run() -> void:
 	await _shot("09_alley")
 	await _cam_shot(main, "10_overview", Vector3(-2, 7, 9), Vector3(30, 0, -2))
 	await _cam_shot(main, "11_houses", Vector3(50, 1.7, -1.2), Vector3(57, 1.6, 5))
+	await _cam_shot(main, "12_shore", Vector3(-9, 1.6, 7), Vector3(-1, 0.0, -1))
 	quit()
 
 ## プレイヤーとは別の固定カメラで撮る

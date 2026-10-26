@@ -34,6 +34,7 @@ xvfb-run godot --path . --rendering-driver opengl3 --resolution 1280x720 -s tool
 - `assets/textures/<名前>/albedo.jpg・normal.jpg・roughness.jpg` は `tools/textures/generate_textures.py` で手続き的に作ったもの。
 - Poly Haven などの写真素材に差し替えるときは、同じフォルダの同じ名前で上書きするだけでよい（色＝diff、凹凸＝nor_gl、ツヤ＝rough）。
 - どの材質にどの画像を使うか、1枚が何メートルかは `data/materials.json`。
+- 色の画像しかない写真素材は `python3 tools/textures/import_photo.py --src <画像> --name <フォルダ名>` で、凹凸とツヤを色の濃淡から作って取り込める（`--normal` で凹凸の強さ、`--rough` でツヤの基準値）。
 - 生成のテスト：`python3 tools/textures/test_texgen.py`
 
 ## 調整しやすい場所

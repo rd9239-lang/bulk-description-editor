@@ -9,6 +9,7 @@ from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import texgen  # noqa: E402
 import generate_textures  # noqa: E402
+import import_photo  # noqa: E402
 
 
 def _seam_ok(img):
@@ -79,6 +80,22 @@ def test_stop_marking_has_transparent_background():
         assert img.mode == "RGBA"
         a = np.asarray(img)[..., 3]
         assert a.min() == 0 and a.max() > 200
+
+
+def test_photo_maps_from_flat_image():
+    rgb = np.full((64, 64, 3), 120, dtype=np.uint8)
+    albedo, normal, rough = import_photo.derive_maps(rgb, size=32, normal_strength=4.0, rough_base=0.7, rough_range=0.3)
+    assert albedo.shape == (32, 32, 3) and normal.shape == (32, 32, 3) and rough.shape == (32, 32)
+    assert (normal[..., 2] == 255).all()
+    assert np.allclose(rough, 0.7, atol=0.02)
+
+
+def test_photo_maps_stay_tileable():
+    h = texgen.fbm(128, 1.2, 9)
+    rgb = np.round(np.repeat(h[..., None], 3, axis=2) * 255).astype(np.uint8)
+    albedo, normal, rough = import_photo.derive_maps(rgb, size=96, normal_strength=4.0, rough_base=0.6, rough_range=0.4)
+    assert _seam_ok(albedo) and _seam_ok(normal) and _seam_ok(rough)
+    assert rough.min() >= 0.0 and rough.max() <= 1.0
 
 
 if __name__ == "__main__":

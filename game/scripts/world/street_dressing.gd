@@ -6,8 +6,8 @@ const PROPS := preload("res://assets/models/street_props.glb")
 const STOP_TEX := preload("res://assets/textures/stop_marking.png")
 
 ## 道路側の塀を置く区間（家と家のすき間）。x の [始め, 終わり] と z
-const FRONT_WALLS := [[-2, 8], [14, 20], [28, 32], [38, 54], [60, 66]]
-const BACK_WALLS := [[-2, 8], [14, 34], [40, 52], [58, 66]]
+const FRONT_WALLS := [[0, 8], [14, 20], [28, 32], [38, 54], [60, 66]]
+const BACK_WALLS := [[0, 8], [14, 34], [40, 52], [58, 66]]
 const FRONT_Z := 4.0
 const BACK_Z := -6.0
 ## 自宅の窓の正面にのびる行き止まりの路地
@@ -103,12 +103,12 @@ static func _alley(parent: Node3D) -> void:
 	mirror.add_to_group("street_props")
 
 static func _road(parent: Node3D) -> void:
-	_flat(parent, "EdgeLineN", Vector3(74, 0.006, 0.12), Vector3(31, 0.024, 1.8), "road_paint")
-	_flat(parent, "EdgeLineS", Vector3(74, 0.006, 0.12), Vector3(31, 0.024, -1.8), "road_paint")
+	_flat(parent, "EdgeLineN", Vector3(69, 0.006, 0.12), Vector3(33.5, 0.024, 1.8), "road_paint")
+	_flat(parent, "EdgeLineS", Vector3(69, 0.006, 0.12), Vector3(33.5, 0.024, -1.8), "road_paint")
 	# 側溝のふた（道路の両脇、見た目だけ）
 	for side in [-1, 1]:
 		for i in 34:
-			var x := -1.0 + i * 2.0
+			var x := 0.0 + i * 2.0
 			if side < 0 and absf(x - ALLEY_X) < 2.5:
 				continue
 			place(parent, "Lid_%d_%d" % [side, i], "GutterLid_2m", Vector3(x, 0.0, side * 2.25), 0.0)

@@ -183,6 +183,16 @@ def tatami(s, seed):
     return albedo, height, rough, 2.0
 
 
+def water(s, seed):
+    """夜の海面（1枚で約6m）。細かいさざ波の凹凸と、とても低いラフネス。"""
+    swell = fbm(s, 1.6, seed, stretch=(3.0, 1.0))
+    ripple = fbm(s, 1.1, seed + 1, stretch=(2.0, 1.0))
+    albedo = lerp([0.008, 0.014, 0.02], [0.02, 0.035, 0.045], swell)
+    rough = 0.05 + 0.05 * ripple
+    height = 0.6 * swell + 0.4 * ripple
+    return albedo, height, rough, 2.5
+
+
 MATERIALS = {
     "asphalt": asphalt,
     "concrete": concrete,
@@ -194,6 +204,7 @@ MATERIALS = {
     "gravel_dirt": gravel_dirt,
     "wood_floor": wood_floor,
     "tatami": tatami,
+    "water": water,
 }
 
 
