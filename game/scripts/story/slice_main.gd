@@ -6,6 +6,14 @@ const STREETLIGHT := preload("res://assets/models/streetlight.glb")
 const POLE := preload("res://assets/models/pole.glb")
 const HOUSE_KIT := preload("res://assets/models/house_kit.glb")
 const PLAYER := preload("res://scenes/parts/player.tscn")
+# Poly Haven（CC0）の小物
+const TABLE := preload("res://assets/models/props/wooden_table_02.glb")
+const LAPTOP := preload("res://assets/models/props/classic_laptop.glb")
+const DRAWER := preload("res://assets/models/props/vintage_wooden_drawer_01.glb")
+const CRATE := preload("res://assets/models/props/plastic_crate_02.glb")
+const FOOD := preload("res://assets/models/props/long_life_food.glb")
+## 床の上面の高さ
+const FLOOR_Y := 0.05
 
 ## 街灯の配置：位置 → 種類
 const LAMPS := {
@@ -312,6 +320,25 @@ func _prop(name: String, pos: Vector3, size: Vector3, color: Color, file: String
 	add_child(p)
 	return p
 
+## 3Dモデルの小物。会話があれば調べられる。col_size は当たり判定（床から立つ箱）
+func _model_prop(name: String, model: PackedScene, pos: Vector3, rot_y: float, col_size: Vector3, file := "", node := "") -> StaticBody3D:
+	var p: StaticBody3D
+	if file != "":
+		var it := Interactable.new()
+		it.dialogue_file = file
+		it.dialogue_node = node
+		it.interacted.connect(_on_interacted)
+		p = it
+	else:
+		p = StaticBody3D.new()
+	p.name = name
+	p.position = pos
+	p.rotation_degrees.y = rot_y
+	p.add_child(model.instantiate())
+	_col(p, col_size, Vector3(0, col_size.y / 2, 0))
+	add_child(p)
+	return p
+
 func _build_interiors() -> void:
 	const CH0 := "res://data/dialogue/ch0.json"
 	const CH1 := "res://data/dialogue/ch1.json"
@@ -330,10 +357,20 @@ func _build_interiors() -> void:
 	# 近所の老婆
 	_npc("Neighbor", Vector3(33, 0, 3.0), Color(0.3, 0.32, 0.28), CH1, "neighbor_1", &"ask_neighbor", &"ask_neighbor", "island")
 	# 自宅：妻、パンフ、整髪料、ラジオ、窓
-	_npc("Wife", Vector3(58.5, 0, 6.8), Color(0.55, 0.32, 0.32), CH1, "wife_ask", &"talk_wife", &"talk_wife", "normal")
-	_prop("Table", Vector3(55.5, 0.35, 6.5), Vector3(1.2, 0.7, 0.8), Color(0.3, 0.22, 0.15), "", "")
-	_prop("Pamphlet", Vector3(55.3, 0.72, 6.4), Vector3(0.3, 0.02, 0.21), Color(0.85, 0.82, 0.7), CH0, "pamphlet")
-	_prop("Pomade", Vector3(59.4, 0.9, 7.6), Vector3(0.08, 0.1, 0.08), Color(0.2, 0.35, 0.3), CH0, "pomade")
+	_npc("Wife", Vector3(58.3, 0, 6.2), Color(0.55, 0.32, 0.32), CH1, "wife_ask", &"talk_wife", &"talk_wife", "normal")
+	# 机（天板 0.8m）の上：ラジオ、パンフ、ノートパソコン
+	_model_prop("PropTable", TABLE, Vector3(55.5, FLOOR_Y, 6.5), 0, Vector3(1.13, 0.8, 0.71))
+	var top := FLOOR_Y + 0.8
+	_model_prop("PropLaptop", LAPTOP, Vector3(55.8, top, 6.68), 180, Vector3(0.4, 0.3, 0.3), CH0, "laptop")
+	_prop("Pamphlet", Vector3(55.45, top + 0.01, 6.3), Vector3(0.3, 0.02, 0.21), Color(0.85, 0.82, 0.7), CH0, "pamphlet")
+	# 奥の壁際の古い箪笥。上に前の住人の整髪料
+	_model_prop("PropDrawer", DRAWER, Vector3(59.0, FLOOR_Y, 7.44), 180, Vector3(1.7, 1.09, 1.0), CH0, "drawer")
+	_prop("Pomade", Vector3(59.4, FLOOR_Y + 1.09 + 0.05, 7.5), Vector3(0.08, 0.1, 0.08), Color(0.2, 0.35, 0.3), CH0, "pomade")
+	# 入口脇の箱と保存食
+	_model_prop("PropCrate", CRATE, Vector3(54.6, FLOOR_Y, 7.4), 90, Vector3(0.41, 0.25, 0.51))
+	_model_prop("PropFood", FOOD, Vector3(54.6, FLOOR_Y + 0.25, 7.4), 90, Vector3(0.11, 0.24, 0.52), CH0, "food")
+	# 妻の実家の玄関脇にも箱
+	_model_prop("PropCrateJikka", CRATE, Vector3(9.6, 0, 3.4), 15, Vector3(0.51, 0.25, 0.41))
 	# 窓を調べるための見えない箱。レイヤー4：調べるレイだけが当たり、視線と体は通す
 	var window := _prop("Window", Vector3(55, 1.4, 4.12), Vector3(0.9, 1.2, 0.05), Color(0, 0, 0, 0), CH0, "window_night", &"first_night", &"first_night")
 	window.get_child(0).visible = false
@@ -341,9 +378,9 @@ func _build_interiors() -> void:
 	radio = Radio.new()
 	radio.name = "Radio"
 	radio.signal_id = &"sos_a_radio"
-	radio.position = Vector3(55.8, 0.75, 6.6)
+	radio.position = Vector3(55.15, FLOOR_Y + 0.9, 6.55)
 	add_child(radio)
-	var radio_prop := _prop("RadioBox", Vector3(55.8, 0.8, 6.6), Vector3(0.35, 0.2, 0.15), Color(0.4, 0.3, 0.2), "", "")
+	var radio_prop := _prop("RadioBox", Vector3(55.15, FLOOR_Y + 0.9, 6.55), Vector3(0.35, 0.2, 0.15), Color(0.4, 0.3, 0.2), "", "")
 	radio_prop.interacted.disconnect(_on_interacted)
 	radio_prop.interacted.connect(func(_t): _tune_radio())
 	_area("HomeEntry", Vector3(5, 2.5, 3), Vector3(57, 1.2, 6.5), _enter_home)

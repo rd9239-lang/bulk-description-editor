@@ -60,4 +60,11 @@ func _run() -> void:
 	main.notebook.visible = true
 	await _wait(0.5)
 	await _shot("06_notebook")
+	main.notebook.visible = false
+	_place(main, Vector3(57.3, 0.1, 4.6), 180, -14)
+	await _wait(1.0)
+	await _shot("07_home_props")
+	_place(main, Vector3(56.2, 0.1, 5.3), 160, -32)
+	await _wait(0.8)
+	await _shot("08_table_closeup")
 	quit()

@@ -1,0 +1,37 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://bilph03x7a1c2"
+path="res://.godot/imported/plastic_crate_02_plastic_crate_02_diff-plastic_crate_02_opacity.png-49faf1f3b3222b85665f1c666ea7ce04.ctex"
+metadata={
+"vram_texture": false
+}
+generator_parameters={
+"md5": "91b7a72289453fe8855245f1115c5555"
+}
+
+[deps]
+
+source_file="res://assets/models/props/plastic_crate_02_plastic_crate_02_diff-plastic_crate_02_opacity.png"
+dest_files=["res://.godot/imported/plastic_crate_02_plastic_crate_02_diff-plastic_crate_02_opacity.png-49faf1f3b3222b85665f1c666ea7ce04.ctex"]
+
+[params]
+
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=1

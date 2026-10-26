@@ -22,3 +22,16 @@ func test_island_slice_builds():
 	assert_true(scene.get_node_or_null("House_Home") != null)
 	assert_true(scene.get_node_or_null("Radio") is Radio)
 	scene.queue_free()
+
+func test_polyhaven_props_placed_with_collision():
+	var scene = load("res://scenes/island_slice.tscn").instantiate()
+	add_child(scene)
+	await get_tree().process_frame
+	for n in ["PropTable", "PropLaptop", "PropDrawer", "PropCrate", "PropFood", "PropCrateJikka"]:
+		var p: Node3D = scene.get_node_or_null(n)
+		assert_true(p != null, n)
+		if p == null:
+			continue
+		assert_true(p.find_children("*", "MeshInstance3D", true, false).size() > 0, n + " mesh")
+		assert_true(p.find_children("*", "CollisionShape3D", true, false).size() > 0, n + " collision")
+	scene.queue_free()

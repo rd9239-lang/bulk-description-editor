@@ -47,3 +47,6 @@ ui_continue,つづきから,Continue
 ui_lang,English,日本語
 end_confession,エンディング⑤　打ち明け話,Ending 5: The Confession
 ui_radio_freq,受信中 %s MHz,Tuned to %s MHz
+d_laptop,仕事用のノートパソコン。リモートで働ける——それが、この島を選んだ理由の一つだった。,My work laptop. Being able to work remotely was one of the reasons we chose this island.
+d_drawer,古い箪笥。前の住人が置いていったものらしい。一番下の引き出しだけ、鍵がかかっている。,"An old chest of drawers, left by the previous tenant. Only the bottom drawer is locked."
+d_food,保存食が箱ごと置いてある。船が止まると、この島には何日も物が届かない。,"A crate of preserved food. When the ferry stops, nothing reaches this island for days."
