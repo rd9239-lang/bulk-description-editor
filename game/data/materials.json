@@ -1,7 +1,7 @@
 {
   "asphalt": {"texture": "asphalt", "meters": 3.0, "normal_scale": 1.0},
   "concrete": {"texture": "concrete", "meters": 2.0, "aliases": ["concrete"]},
-  "block_wall": {"texture": "block_wall", "meters": 0.8},
+  "block_wall": {"texture": "block_wall", "meters": 0.8, "aliases": ["block_wall"]},
   "plank": {"texture": "wood_weathered", "meters": 1.2, "aliases": ["plank"]},
   "plank_dark": {"texture": "wood_weathered", "meters": 1.2, "tint": [0.68, 0.64, 0.6], "aliases": ["plank_dark", "crossarm"]},
   "tin_roof": {"texture": "corrugated_rust", "meters": 1.0, "metallic": 0.25, "normal_scale": 1.4, "aliases": ["tin_roof"]},
@@ -10,5 +10,12 @@
   "gravel": {"texture": "gravel_dirt", "meters": 2.0, "tint": [0.62, 0.62, 0.62]},
   "wood_floor": {"texture": "wood_floor", "meters": 2.0},
   "tatami": {"texture": "tatami", "meters": 0.9, "aliases": ["tatami_floor"]},
-  "glass": {"color": [0.05, 0.06, 0.07, 0.12], "roughness": 0.03, "specular": 0.8, "aliases": ["glass"]}
+  "glass": {"color": [0.05, 0.06, 0.07, 0.12], "roughness": 0.03, "specular": 0.8, "aliases": ["glass"]},
+  "steel": {"texture": "painted_metal", "meters": 0.5, "tint": [0.42, 0.4, 0.42], "metallic": 0.6, "aliases": ["grate", "steel"]},
+  "orange_paint": {"color": [0.78, 0.33, 0.07, 1.0], "roughness": 0.55, "aliases": ["mirror_pole", "mirror_frame"]},
+  "mirror": {"color": [0.92, 0.93, 0.95, 1.0], "roughness": 0.03, "metallic": 1.0, "aliases": ["mirror"]},
+  "ac_body": {"color": [0.74, 0.72, 0.66, 1.0], "roughness": 0.55, "aliases": ["ac_body"]},
+  "ac_grill": {"color": [0.06, 0.06, 0.06, 1.0], "roughness": 0.6, "aliases": ["ac_grill"]},
+  "gas_meter": {"color": [0.55, 0.57, 0.55, 1.0], "roughness": 0.5, "metallic": 0.3, "aliases": ["gas_meter"]},
+  "road_paint": {"color": [0.82, 0.82, 0.78, 1.0], "roughness": 0.65}
 }

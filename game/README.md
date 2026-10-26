@@ -19,12 +19,22 @@ blender -b -P tools/blender/build_streetlight.py -- --out assets/models/streetli
 # または Blender を Python モジュール（pip install bpy）として:
 python3 tools/blender/build_streetlight.py --out assets/models/streetlight.glb
 ```
-`build_pole.py`、`build_house_kit.py` も同様です。
+`build_pole.py`、`build_house_kit.py`、`build_street_props.py`（ブロック塀・側溝のふた・カーブミラー・室外機・ガスメーター・仮の人物）も同様です。
 
 ## 画面確認（スクリーンショット）
 ```bash
 xvfb-run godot --path . --rendering-driver opengl3 --resolution 1280x720 -s tools/capture.gd -- <出力先> [ja|en]
 ```
+
+## 画質
+- タイトル画面の「画質：高／低」で切り替え。高はボリュメトリックフォグ・映り込み（SSR）・陰影（SSAO）・影あり（Vulkan 対応の GPU が必要）。
+- 古い PC 向けには Godot の Compatibility（OpenGL）でも動く（霧や映り込みなしの軽い見た目）。
+
+## 質感画像（テクスチャ）
+- `assets/textures/<名前>/albedo.jpg・normal.jpg・roughness.jpg` は `tools/textures/generate_textures.py` で手続き的に作ったもの。
+- Poly Haven などの写真素材に差し替えるときは、同じフォルダの同じ名前で上書きするだけでよい（色＝diff、凹凸＝nor_gl、ツヤ＝rough）。
+- どの材質にどの画像を使うか、1枚が何メートルかは `data/materials.json`。
+- 生成のテスト：`python3 tools/textures/test_texgen.py`
 
 ## 調整しやすい場所
 - 信号（文字・打ち癖・休み）：`data/signals.json`

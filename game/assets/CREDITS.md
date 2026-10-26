@@ -12,4 +12,5 @@
 | `models/props/long_life_food.glb` | Long Life Food — https://polyhaven.com/a/long_life_food |
 
 ## 自作
-- `models/streetlight.glb`, `models/pole.glb`, `models/house_kit.glb`：`tools/blender/build_*.py` で生成
+- `models/streetlight.glb`, `models/pole.glb`, `models/house_kit.glb`, `models/street_props.glb`：`tools/blender/build_*.py` で生成
+- `textures/*`（アスファルト、コンクリート、ブロック、古い板、トタン、塗装の鉄、漆喰、砂利、板床、畳、「止まれ」）：`tools/textures/generate_textures.py` で手続き的に生成

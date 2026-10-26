@@ -28,6 +28,7 @@ static func build_environment(q: StringName) -> Environment:
 	env.fog_enabled = true
 	env.fog_light_color = Color(0.045, 0.055, 0.08)
 	env.fog_density = 0.006 if high else 0.02
+	env.fog_sky_affect = 0.25
 	env.adjustment_enabled = true
 	env.adjustment_contrast = 1.08
 	env.adjustment_saturation = 0.82
@@ -37,6 +38,7 @@ static func build_environment(q: StringName) -> Environment:
 	env.volumetric_fog_anisotropy = 0.45
 	env.volumetric_fog_length = 48.0
 	env.volumetric_fog_ambient_inject = 0.35
+	env.volumetric_fog_sky_affect = 0.15
 	env.ssr_enabled = high
 	env.ssr_max_steps = 64
 	env.ssr_fade_in = 0.15

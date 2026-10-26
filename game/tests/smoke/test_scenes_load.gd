@@ -47,3 +47,18 @@ func test_quality_toggle_updates_environment():
 	assert_true(scene.get_node("WorldEnv").environment.volumetric_fog_enabled)
 	assert_true(scene.get_node("Moon").shadow_enabled)
 	scene.queue_free()
+
+func test_street_dressing_and_house_detail():
+	var scene = load("res://scenes/island_slice.tscn").instantiate()
+	add_child(scene)
+	await get_tree().process_frame
+	var home: Node3D = scene.get_node("House_Home")
+	for part in ["RoofL", "RoofR", "Ridge", "GableL", "GableR", "Ceiling", "Foundation", "Gutter"]:
+		assert_true(home.find_child(part, true, false) != null, part)
+	assert_true(get_tree().get_nodes_in_group("block_walls").size() >= 10)
+	assert_true(get_tree().get_nodes_in_group("wires").size() >= 8)
+	for n in ["AlleyPave", "StopMarking", "CurveMirror", "EdgeLineN", "EdgeLineS"]:
+		assert_true(scene.get_node_or_null(n) != null, n)
+	var body := scene.get_node("Mother").get_node_or_null("Body") as MeshInstance3D
+	assert_true(body != null and not (body.mesh is CapsuleMesh))
+	scene.queue_free()

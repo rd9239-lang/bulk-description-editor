@@ -58,6 +58,8 @@ func _ready() -> void:
 	for name in HOUSES:
 		var h: Array = HOUSES[name]
 		_build_house(name, h[0], h[1], h[2])
+	StreetDressing.build(self)
+	_build_utilities()
 	_build_interiors()
 	MaterialLibrary.apply(self)
 	_build_ui()
@@ -172,9 +174,12 @@ func _build_street() -> void:
 		street.add_child(pole)
 		if prev:
 			for side in ["WireAnchor_L", "WireAnchor_R"]:
-				_wire(street, prev.position + (prev.find_child(side) as Node3D).position,
-					pole.position + (pole.find_child(side) as Node3D).position)
+				StreetDressing.wire(street, prev.position + (prev.find_child(side) as Node3D).position,
+					pole.position + (pole.find_child(side) as Node3D).position, 0.55)
 		prev = pole
+	# 電柱から家への引き込み線
+	StreetDressing.wire(street, Vector3(8.7, 8.3, -4.4), Vector3(9.0, 2.75, 3.6), 0.35)
+	StreetDressing.wire(street, Vector3(56.7, 8.3, -4.4), Vector3(59.0, 2.75, 3.6), 0.35)
 
 func _add_pole_collision(parent: Node3D, radius: float, height: float) -> void:
 	var body := StaticBody3D.new()
@@ -187,22 +192,7 @@ func _add_pole_collision(parent: Node3D, radius: float, height: float) -> void:
 	body.add_child(cs)
 	parent.add_child(body)
 
-func _wire(parent: Node3D, a: Vector3, b: Vector3) -> void:
-	var mi := MeshInstance3D.new()
-	var cm := CylinderMesh.new()
-	cm.top_radius = 0.01
-	cm.bottom_radius = 0.01
-	cm.height = a.distance_to(b)
-	var m := StandardMaterial3D.new()
-	m.albedo_color = Color(0.03, 0.03, 0.03)
-	cm.material = m
-	mi.mesh = cm
-	parent.add_child(mi)
-	mi.global_transform = Transform3D(Basis(), (a + b) / 2)
-	mi.look_at((a + b) / 2 + (b - a), Vector3.UP)
-	mi.rotate_object_local(Vector3.RIGHT, PI / 2)
-
-## 正面（道路側、ローカル z=0）を部品で、奥と側面を壁で囲う。屋根は波板。
+## 正面（道路側、ローカル z=0）を部品で、奥と側面を壁で囲う。屋根などは HouseDetail。
 func _build_house(name: String, origin: Vector3, front: Array, depth: int) -> void:
 	var house := Node3D.new()
 	house.name = name
@@ -216,10 +206,10 @@ func _build_house(name: String, origin: Vector3, front: Array, depth: int) -> vo
 		_piece(house, "Wall_2m", Vector3(1 + i * 2, 0, depth * 2), 0)
 		for j in depth:
 			_piece(house, "Floor_2m", Vector3(1 + i * 2, 0.0, 1 + j * 2), 0)
-			_piece(house, "Roof_Tile_2m", Vector3(1 + i * 2, 2.6, 1 + j * 2), 0)
 	for j in depth:
 		_piece(house, "Wall_2m", Vector3(0, 0, 1 + j * 2), 90)
 		_piece(house, "Wall_2m", Vector3(w * 2, 0, 1 + j * 2), 90)
+	HouseDetail.add(house, w * 2.0, depth * 2.0, front)
 	var lamp := OmniLight3D.new()
 	lamp.add_to_group("room_lights")
 	GraphicsSettings.configure_lamp(lamp, GraphicsSettings.quality)
@@ -277,26 +267,19 @@ func _npc(name: String, pos: Vector3, color: Color, file: String, node: String, 
 	npc.active_goal = goal
 	npc.completes_goal = completes
 	npc.knock = knock_kind
+	# 仮の人型（服の色だけ人物ごとに変える）。モデルは +Z を向くので道路側（-Z）へ回す
 	var body := MeshInstance3D.new()
-	var cap := CapsuleMesh.new()
-	cap.radius = 0.25
-	cap.height = 1.5
-	var m := StandardMaterial3D.new()
-	m.albedo_color = color
-	cap.material = m
-	body.mesh = cap
-	body.position.y = 0.75
+	body.name = "Body"
+	body.mesh = StreetDressing.mesh("Mannequin_F")
+	body.rotation_degrees.y = 180
+	for i in body.mesh.get_surface_count():
+		var src := body.mesh.surface_get_material(i)
+		if src and src.resource_name == "npc_cloth":
+			var m := StandardMaterial3D.new()
+			m.albedo_color = color
+			m.roughness = 0.85
+			body.set_surface_override_material(i, m)
 	npc.add_child(body)
-	var head := MeshInstance3D.new()
-	var sm := SphereMesh.new()
-	sm.radius = 0.13
-	sm.height = 0.26
-	var hm := StandardMaterial3D.new()
-	hm.albedo_color = Color(0.85, 0.75, 0.65)
-	sm.material = hm
-	head.mesh = sm
-	head.position.y = 1.62
-	npc.add_child(head)
 	_col(npc, Vector3(0.5, 1.8, 0.5), Vector3(0, 0.9, 0))
 	npc.interacted.connect(_on_interacted)
 	add_child(npc)
@@ -322,6 +305,14 @@ func _prop(name: String, pos: Vector3, size: Vector3, color: Color, file: String
 	p.interacted.connect(_on_interacted)
 	add_child(p)
 	return p
+
+## 室外機とガスメーター
+func _build_utilities() -> void:
+	StreetDressing.place(self, "AC_Home", "ACUnit", Vector3(60.35, 0, 6.0), 90.0, Vector3(0.3, 0.6, 0.8))
+	StreetDressing.place(self, "Gas_Home", "GasMeter", Vector3(56.0, 0, 3.92), 180.0)
+	StreetDressing.place(self, "AC_Jikka", "ACUnit", Vector3(7.65, 0, 6.0), -90.0, Vector3(0.3, 0.6, 0.8))
+	StreetDressing.place(self, "Gas_Jikka", "GasMeter", Vector3(12.0, 0, 3.92), 180.0)
+	StreetDressing.place(self, "AC_Neighbor", "ACUnit", Vector3(38.35, 0, 6.5), 90.0, Vector3(0.3, 0.6, 0.8))
 
 ## 3Dモデルの小物。会話があれば調べられる。col_size は当たり判定（床から立つ箱）
 func _model_prop(name: String, model: PackedScene, pos: Vector3, rot_y: float, col_size: Vector3, file := "", node := "") -> StaticBody3D:

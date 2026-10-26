@@ -67,4 +67,20 @@ func _run() -> void:
 	_place(main, Vector3(56.2, 0.1, 5.3), 160, -32)
 	await _wait(0.8)
 	await _shot("08_table_closeup")
+	_place(main, Vector3(55.0, 0.1, 1.2), 0, 6)
+	await _wait(1.2)
+	await _shot("09_alley")
+	await _cam_shot(main, "10_overview", Vector3(-2, 7, 9), Vector3(30, 0, -2))
+	await _cam_shot(main, "11_houses", Vector3(50, 1.7, -1.2), Vector3(57, 1.6, 5))
 	quit()
+
+## プレイヤーとは別の固定カメラで撮る
+func _cam_shot(main, name: String, pos: Vector3, target: Vector3) -> void:
+	var cam := Camera3D.new()
+	main.add_child(cam)
+	cam.global_position = pos
+	cam.look_at(target, Vector3.UP)
+	cam.make_current()
+	await _wait(1.0)
+	await _shot(name)
+	cam.queue_free()

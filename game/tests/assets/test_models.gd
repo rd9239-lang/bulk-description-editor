@@ -30,3 +30,17 @@ func test_house_kit_contract():
 	for name in ["Wall_2m", "Wall_Window_2m", "Door_Frame", "Floor_2m", "Roof_Tile_2m"]:
 		assert_true(n.find_child(name, true, false) != null, name)
 	n.free()
+
+func test_street_props_contract():
+	var n := _inst("res://assets/models/street_props.glb")
+	if n == null: return
+	for name in ["BlockWall_2m", "GutterLid_2m", "CurveMirror", "ACUnit", "GasMeter", "Mannequin_F"]:
+		var c := n.find_child(name, true, false) as Node3D
+		assert_true(c != null, name)
+	var wall := n.find_child("BlockWall_2m", true, false) as MeshInstance3D
+	var aabb := wall.get_aabb()
+	assert_almost_eq(aabb.size.x, 2.0, 0.05)
+	assert_almost_eq(aabb.position.y, 0.0, 0.02)
+	var man := n.find_child("Mannequin_F", true, false) as MeshInstance3D
+	assert_between(man.get_aabb().size.y, 1.5, 1.7)
+	n.free()
