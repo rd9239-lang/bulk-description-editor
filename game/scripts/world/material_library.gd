@@ -30,9 +30,20 @@ static func material(name: String) -> StandardMaterial3D:
 	if not _specs.has(name):
 		return null
 	var spec: Dictionary = _specs[name]
-	var tex: String = spec["texture"]
 	var m := StandardMaterial3D.new()
 	m.resource_name = "lib_" + name
+	if not spec.has("texture"):
+		# 画像を使わない材質（ガラスなど）
+		var c: Array = spec.get("color", [1.0, 1.0, 1.0, 1.0])
+		m.albedo_color = Color(c[0], c[1], c[2], c[3] if c.size() > 3 else 1.0)
+		m.roughness = spec.get("roughness", 1.0)
+		m.metallic = spec.get("metallic", 0.0)
+		m.metallic_specular = spec.get("specular", 0.5)
+		if m.albedo_color.a < 1.0:
+			m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_cache[name] = m
+		return m
+	var tex: String = spec["texture"]
 	m.albedo_texture = load(TEXTURES % [tex, "albedo"])
 	var tint: Array = spec.get("tint", [1.0, 1.0, 1.0])
 	m.albedo_color = Color(tint[0], tint[1], tint[2])

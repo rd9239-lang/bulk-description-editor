@@ -18,12 +18,12 @@ func test_unknown_material_is_null():
 func test_source_names_map_to_library():
 	assert_eq(MaterialLibrary.for_source("tin_roof"), MaterialLibrary.material("tin_roof"))
 	assert_eq(MaterialLibrary.for_source("plank"), MaterialLibrary.material("plank"))
-	assert_eq(MaterialLibrary.for_source("glass"), null)
+	assert_true(MaterialLibrary.for_source("glass").transparency == BaseMaterial3D.TRANSPARENCY_ALPHA)
 	assert_eq(MaterialLibrary.for_source("lamp_emit"), null)
 
 func test_apply_replaces_only_known_materials():
 	var root := Node3D.new()
-	for src in ["plank", "glass"]:
+	for src in ["plank", "unknown_mat"]:
 		var mi := MeshInstance3D.new()
 		var bm := BoxMesh.new()
 		var m := StandardMaterial3D.new()
@@ -34,7 +34,7 @@ func test_apply_replaces_only_known_materials():
 		root.add_child(mi)
 	assert_eq(MaterialLibrary.apply(root), 1)
 	assert_eq((root.get_node("plank") as MeshInstance3D).get_surface_override_material(0), MaterialLibrary.material("plank"))
-	assert_true((root.get_node("glass") as MeshInstance3D).get_surface_override_material(0) == null)
+	assert_true((root.get_node("unknown_mat") as MeshInstance3D).get_surface_override_material(0) == null)
 	root.free()
 
 func test_streetlight_model_gets_textures():
@@ -43,3 +43,9 @@ func test_streetlight_model_gets_textures():
 	var pole := n.find_child("Pole", true, false) as MeshInstance3D
 	assert_eq(pole.get_surface_override_material(0), MaterialLibrary.material("concrete"))
 	n.free()
+
+func test_plain_material_without_texture():
+	var g := MaterialLibrary.material("glass")
+	assert_true(g.albedo_texture == null)
+	assert_true(g.albedo_color.a < 0.3)
+	assert_true(g.roughness < 0.1)

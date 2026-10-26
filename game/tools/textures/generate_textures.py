@@ -26,7 +26,7 @@ def asphalt(s, seed):
     wet = smoothstep(0.63, 0.70, puddle)
     damp = smoothstep(0.48, 0.63, puddle)
     g = 0.085 + 0.05 * fine + 0.03 * (low - 0.5) + 0.13 * stone * (0.5 + 0.5 * sid)
-    g = g * (1 - 0.7 * crack) * (1 - 0.35 * damp) * (1 - 0.25 * wet)
+    g = g * (1 - 0.7 * crack) * (1 - 0.2 * damp) * (1 - 0.1 * wet)
     albedo = lerp([1.0, 1.0, 1.0], [0.95, 0.97, 1.03], 0.5)[None, None, :] * g[..., None]
     rough = (0.9 - 0.12 * stone) * (1 - damp * 0.45)
     rough = lerp(rough, 0.04, wet)

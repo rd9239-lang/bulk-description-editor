@@ -35,3 +35,15 @@ func test_polyhaven_props_placed_with_collision():
 		assert_true(p.find_children("*", "MeshInstance3D", true, false).size() > 0, n + " mesh")
 		assert_true(p.find_children("*", "CollisionShape3D", true, false).size() > 0, n + " collision")
 	scene.queue_free()
+
+func test_quality_toggle_updates_environment():
+	var scene = load("res://scenes/island_slice.tscn").instantiate()
+	add_child(scene)
+	await get_tree().process_frame
+	assert_true(scene.get_node_or_null("PostFX") != null)
+	scene.apply_quality(&"low")
+	assert_false(scene.get_node("WorldEnv").environment.volumetric_fog_enabled)
+	scene.apply_quality(&"high")
+	assert_true(scene.get_node("WorldEnv").environment.volumetric_fog_enabled)
+	assert_true(scene.get_node("Moon").shadow_enabled)
+	scene.queue_free()

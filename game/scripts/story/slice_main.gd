@@ -73,24 +73,26 @@ func _load_kit() -> void:
 	kit.free()
 
 func _build_environment() -> void:
-	var env := Environment.new()
-	env.background_mode = Environment.BG_COLOR
-	env.background_color = Color(0.02, 0.025, 0.05)
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.25, 0.3, 0.45)
-	env.ambient_light_energy = 0.25
-	env.fog_enabled = true
-	env.fog_light_color = Color(0.05, 0.06, 0.09)
-	env.fog_density = 0.03
-	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	var we := WorldEnvironment.new()
-	we.environment = env
+	we.name = "WorldEnv"
 	add_child(we)
 	var moon := DirectionalLight3D.new()
+	moon.name = "Moon"
 	moon.light_color = Color(0.55, 0.65, 0.9)
-	moon.light_energy = 0.12
+	moon.light_energy = 0.3
 	moon.rotation_degrees = Vector3(-35, 30, 0)
 	add_child(moon)
+	apply_quality(GraphicsSettings.quality)
+
+## 画質の切り替え（環境・月の影・街灯と室内灯の影）
+func apply_quality(q: StringName) -> void:
+	GraphicsSettings.quality = q
+	($WorldEnv as WorldEnvironment).environment = GraphicsSettings.build_environment(q)
+	($Moon as DirectionalLight3D).shadow_enabled = q == &"high"
+	for lamp in find_children("*", "Streetlight", true, false):
+		(lamp as Streetlight).apply_quality(q)
+	for light in get_tree().get_nodes_in_group("room_lights") if is_inside_tree() else []:
+		GraphicsSettings.configure_lamp(light, q)
 
 ## 箱の地形。look は質感一覧の名前（data/materials.json）
 func _box_body(name: String, size: Vector3, pos: Vector3, look: String, parent: Node = self) -> StaticBody3D:
@@ -219,9 +221,11 @@ func _build_house(name: String, origin: Vector3, front: Array, depth: int) -> vo
 		_piece(house, "Wall_2m", Vector3(0, 0, 1 + j * 2), 90)
 		_piece(house, "Wall_2m", Vector3(w * 2, 0, 1 + j * 2), 90)
 	var lamp := OmniLight3D.new()
-	lamp.light_color = Color(1.0, 0.75, 0.45)
-	lamp.light_energy = 0.6
-	lamp.omni_range = 6.0
+	lamp.add_to_group("room_lights")
+	GraphicsSettings.configure_lamp(lamp, GraphicsSettings.quality)
+	lamp.light_color = Color(1.0, 0.72, 0.42)
+	lamp.light_energy = 1.6
+	lamp.omni_range = 7.0
 	lamp.position = Vector3(w, 2.2, depth)
 	house.add_child(lamp)
 
@@ -393,6 +397,18 @@ func _enter_home() -> void:
 # ---------- UI ----------
 
 func _build_ui() -> void:
+	# 画面効果（周辺減光・粒子・色ずれ）。UI より下、3D より上に重ねる
+	var fx_layer := CanvasLayer.new()
+	fx_layer.name = "PostFX"
+	fx_layer.layer = 0
+	var fx := ColorRect.new()
+	fx.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var fx_mat := ShaderMaterial.new()
+	fx_mat.shader = preload("res://shaders/post_fx.gdshader")
+	fx.material = fx_mat
+	fx_layer.add_child(fx)
+	add_child(fx_layer)
 	var ui := CanvasLayer.new()
 	add_child(ui)
 	_hud_goal = Label.new()
@@ -452,7 +468,15 @@ func _show_menu() -> void:
 	b_lang.text = tr("ui_lang")
 	b_lang.pressed.connect(_toggle_language)
 	_menu.add_child(b_lang)
+	var b_q := Button.new()
+	b_q.text = tr("ui_quality_high" if GraphicsSettings.quality == &"high" else "ui_quality_low")
+	b_q.pressed.connect(_toggle_quality)
+	_menu.add_child(b_q)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+func _toggle_quality() -> void:
+	apply_quality(&"low" if GraphicsSettings.quality == &"high" else &"high")
+	_show_menu()
 
 func _toggle_language() -> void:
 	TranslationServer.set_locale("en" if TranslationServer.get_locale().begins_with("ja") else "ja")
