@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/player/interactor.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/player/signal_observer.gd" id="3"]
+
+[sub_resource type="CapsuleShape3D" id="cap"]
+radius = 0.3
+height = 1.75
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1")
+
+[node name="Shape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("cap")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+fov = 70.0
+
+[node name="Interactor" type="RayCast3D" parent="Head/Camera3D"]
+script = ExtResource("2")
+
+[node name="HandLight" type="SpotLight3D" parent="Head"]
+light_color = Color(1, 0.93, 0.8, 1)
+light_energy = 2.0
+spot_range = 14.0
+spot_angle = 28.0
+
+[node name="SignalObserver" type="Node" parent="."]
+script = ExtResource("3")

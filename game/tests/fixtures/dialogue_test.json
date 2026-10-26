@@ -1,0 +1,10 @@
+{
+  "start": {"speaker_key": "spk_wife", "text_key": "t_hello", "next": "ask"},
+  "ask": {"speaker_key": "spk_wife", "text_key": "t_ask", "next": null, "choices": [
+    {"text_key": "c_tell", "next": "told", "set": {"told_wife": true}},
+    {"text_key": "c_flag", "next": "end", "set": {"asked_neighbor": true}},
+    {"text_key": "c_secret", "next": "end", "require": {"knows_secret": true}}
+  ]},
+  "told": {"speaker_key": "spk_wife", "text_key": "t_told", "next": null},
+  "end": {"speaker_key": "spk_wife", "text_key": "t_end", "next": null}
+}
