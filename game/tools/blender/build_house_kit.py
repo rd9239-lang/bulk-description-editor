@@ -14,7 +14,7 @@ reset()
 
 plank = material("plank", (0.36, 0.29, 0.22))
 plank_dark = material("plank_dark", (0.25, 0.2, 0.15))
-glass = material("glass", (0.5, 0.6, 0.65), rough=0.1)
+glass = material("glass", (0.55, 0.62, 0.68), rough=0.05, alpha=0.18)
 floor = material("tatami_floor", (0.6, 0.55, 0.38))
 tin = material("tin_roof", (0.38, 0.27, 0.22), rough=0.6, metal=0.5)
 
@@ -35,16 +35,17 @@ def planks(x0, y_center, width, z0, height, name_prefix):
 # Wall_2m
 join("Wall_2m", planks(0, 0, 2.0, 0, H, "w"), origin=(0, 0, 0))
 
-# Wall_Window_2m（幅 0.9m・高さ 0.9m の窓、下端 0.9m）
+# Wall_Window_2m（幅 0.9m・高さ 1.2m の窓、下端 0.8m。外の街灯を見上げられる高さ）
 X = 3.0
-parts = planks(X, 0, 2.0, 0, 0.9, "ww_low")
-parts += planks(X, 0, 2.0, 1.8, H - 1.8, "ww_top")
-parts.append(box("ww_left", (0.55, T, 0.9), (X - 0.725, 0, 1.35), plank))
-parts.append(box("ww_right", (0.55, T, 0.9), (X + 0.725, 0, 1.35), plank))
-parts.append(box("ww_glass", (0.9, 0.02, 0.9), (X, 0, 1.35), glass))
-for dz in (0.0, 0.45, 0.9):
-    parts.append(box(f"ww_bar_{dz}", (0.9, 0.04, 0.03), (X, 0, 0.9 + dz), plank_dark))
-parts.append(box("ww_mullion", (0.03, 0.04, 0.9), (X, 0, 1.35), plank_dark))
+WB, WT = 0.8, 2.0
+parts = planks(X, 0, 2.0, 0, WB, "ww_low")
+parts += planks(X, 0, 2.0, WT, H - WT, "ww_top")
+parts.append(box("ww_left", (0.55, T, WT - WB), (X - 0.725, 0, (WB + WT) / 2), plank))
+parts.append(box("ww_right", (0.55, T, WT - WB), (X + 0.725, 0, (WB + WT) / 2), plank))
+parts.append(box("ww_glass", (0.9, 0.02, WT - WB), (X, 0, (WB + WT) / 2), glass))
+for dz in (0.0, 0.6, 1.2):
+    parts.append(box(f"ww_bar_{dz}", (0.9, 0.04, 0.03), (X, 0, WB + dz), plank_dark))
+parts.append(box("ww_mullion", (0.03, 0.04, WT - WB), (X, 0, (WB + WT) / 2), plank_dark))
 join("Wall_Window_2m", parts, origin=(X, 0, 0))
 
 # Door_Frame（開口 0.9m×1.9m）

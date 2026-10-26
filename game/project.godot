@@ -4,6 +4,7 @@ config_version=5
 [application]
 config/name="Streetlight SOS"
 config/features=PackedStringArray("4.3")
+run/main_scene="res://scenes/island_slice.tscn"
 
 [internationalization]
 locale/translations=PackedStringArray("res://i18n/strings.ja.translation", "res://i18n/strings.en.translation")

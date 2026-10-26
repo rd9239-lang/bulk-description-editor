@@ -9,10 +9,10 @@ var _text: Label
 var _choices: VBoxContainer
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var panel := PanelContainer.new()
-	panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	panel.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	panel.offset_top = -220; panel.offset_left = 120; panel.offset_right = -120; panel.offset_bottom = -40
 	add_child(panel)
 	var box := VBoxContainer.new()

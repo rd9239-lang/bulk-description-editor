@@ -21,13 +21,19 @@ def reset():
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
 
-def material(name, color, rough=0.85, metal=0.0, emission=None):
+def material(name, color, rough=0.85, metal=0.0, emission=None, alpha=1.0):
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     bsdf = m.node_tree.nodes["Principled BSDF"]
     bsdf.inputs["Base Color"].default_value = (*color, 1.0)
     bsdf.inputs["Roughness"].default_value = rough
     bsdf.inputs["Metallic"].default_value = metal
+    if alpha < 1.0:
+        bsdf.inputs["Alpha"].default_value = alpha
+        if hasattr(m, "surface_render_method"):
+            m.surface_render_method = "BLENDED"
+        if hasattr(m, "blend_method"):
+            m.blend_method = "BLEND"
     if emission is not None:
         key = "Emission Color" if "Emission Color" in bsdf.inputs else "Emission"
         bsdf.inputs[key].default_value = (*emission, 1.0)

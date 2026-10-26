@@ -2,6 +2,8 @@
 class_name Notebook
 extends Control
 
+signal recorded(signal_id: StringName)
+
 var state: GameStateData
 var defs: Dictionary
 
@@ -30,6 +32,7 @@ func record(signal_id: StringName) -> bool:
 	var d: SignalDef = _get_defs()[signal_id]
 	_get_state().notebook.append({"signal_id": signal_id, "label_key": d.label_key, "decoded": not d.hidden})
 	_get_state().changed.emit()
+	recorded.emit(signal_id)
 	if is_inside_tree():
 		_rebuild()
 	return true
@@ -60,13 +63,13 @@ func try_manual_decode(signal_id: StringName, guess: String) -> bool:
 
 func _ready() -> void:
 	visible = false
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var bg := ColorRect.new()
 	bg.color = Color(0.08, 0.07, 0.06, 0.92)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var scroll := ScrollContainer.new()
-	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
+	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	scroll.offset_left = 80; scroll.offset_top = 60; scroll.offset_right = -80; scroll.offset_bottom = -60
 	add_child(scroll)
 	_list = VBoxContainer.new()

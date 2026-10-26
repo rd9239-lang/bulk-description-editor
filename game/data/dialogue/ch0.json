@@ -1,0 +1,42 @@
+{
+  "mother_1": {
+    "speaker_key": "spk_mother",
+    "text_key": "d_mother_1",
+    "next": "wife_1"
+  },
+  "wife_1": {
+    "speaker_key": "spk_wife",
+    "text_key": "d_wife_1",
+    "next": "mother_2"
+  },
+  "mother_2": {
+    "speaker_key": "spk_mother",
+    "text_key": "d_mother_2",
+    "next": "wife_2"
+  },
+  "wife_2": {
+    "speaker_key": "spk_wife",
+    "text_key": "d_wife_2",
+    "next": null
+  },
+  "pamphlet": {
+    "speaker_key": "spk_none",
+    "text_key": "d_pamphlet",
+    "next": null
+  },
+  "pomade": {
+    "speaker_key": "spk_none",
+    "text_key": "d_pomade",
+    "next": null
+  },
+  "museum_sign": {
+    "speaker_key": "spk_none",
+    "text_key": "d_museum_sign",
+    "next": null
+  },
+  "window_night": {
+    "speaker_key": "spk_me",
+    "text_key": "d_window_night",
+    "next": null
+  }
+}

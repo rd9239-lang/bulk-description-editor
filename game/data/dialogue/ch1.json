@@ -1,0 +1,45 @@
+{
+  "neighbor_1": {
+    "speaker_key": "spk_neighbor",
+    "text_key": "d_neighbor_1",
+    "next": "neighbor_2"
+  },
+  "neighbor_2": {
+    "speaker_key": "spk_neighbor",
+    "text_key": "d_neighbor_2",
+    "next": null
+  },
+  "wife_ask": {
+    "speaker_key": "spk_wife",
+    "text_key": "d_wife_ask",
+    "next": null,
+    "choices": [
+      {
+        "text_key": "c_tell_wife",
+        "next": "wife_confession",
+        "set": {
+          "told_wife": true
+        }
+      },
+      {
+        "text_key": "c_keep_quiet",
+        "next": "wife_old_lamp"
+      }
+    ]
+  },
+  "wife_confession": {
+    "speaker_key": "spk_wife",
+    "text_key": "d_wife_confession",
+    "next": null
+  },
+  "wife_old_lamp": {
+    "speaker_key": "spk_wife",
+    "text_key": "d_wife_old_lamp",
+    "next": null
+  },
+  "radio_hint": {
+    "speaker_key": "spk_me",
+    "text_key": "d_radio_hint",
+    "next": null
+  }
+}

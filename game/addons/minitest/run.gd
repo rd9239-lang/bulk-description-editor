@@ -7,6 +7,8 @@ func _initialize() -> void:
 	var args := OS.get_cmdline_user_args()
 	if args.size() > 0:
 		filter = args[0]
+	# ルートがツリーに入りきるまで1フレーム待つ
+	await process_frame
 	var files: Array[String] = []
 	_collect("res://tests", files)
 	files.sort()
@@ -26,9 +28,9 @@ func _initialize() -> void:
 			var t: GutTest = script.new()
 			root.add_child(t)
 			t._current = "%s::%s" % [path.get_file(), name]
-			t.before_each()
+			await t.before_each()
 			await t.call(name)
-			t.after_each()
+			await t.after_each()
 			if t._asserts == 0:
 				t._fail("no assertions ran (script error?)")
 			total += 1

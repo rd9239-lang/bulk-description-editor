@@ -6,3 +6,44 @@ sig_oldman,老人の指,The old man's fingers
 nb_sep,：,": "
 nb_title,信号手帳,Signal Notebook
 nb_decode_hint,解読した文字を入力,Type your decoding
+sig_sos_a_radio,ラジオの雑音,Radio static
+spk_none,,
+spk_me,僕,Me
+spk_mother,妻の母,Wife's mother
+spk_wife,妻,Wife
+spk_neighbor,近所の老婆,Old neighbor
+d_mother_1,おかえり、ちいちゃん。……あら、旦那さんも。遠いところをよう来てくれたねえ。,"Welcome home, Chii. ...Oh, and your husband too. Thank you for coming all this way."
+d_wife_1,……あ、うん。ただいま、お母さん。,"...Oh, yes. I'm home, Mom."
+d_mother_2,移住のお家、掃除しといたけんね。資料館にも寄っていき。あんた、昔あそこの灯りの展示が好きやったろう。,"I cleaned the new house for you. Stop by the museum, too. You always loved the light exhibit there as a girl."
+d_wife_2,そうだったかな。……行ってみようか。,Did I? ...Let's go take a look.
+d_pamphlet,移住支援のパンフレット。「ご夫婦での移住歓迎。ご親族の少ない方も安心のサポート」,"A relocation-support pamphlet. ""Couples welcome. Full support, even for those with few relatives."""
+d_pomade,使いかけの男物の整髪料。前の住人のものだろうか。,"A half-used jar of men's pomade. The previous tenant's, maybe."
+d_museum_sign,炭鉱では、ベルの回数や灯りの点け方で合図を送り合った。下の灯りは、島の子どもたちがモールス信号で打った言葉だ。（N：信号手帳　灯りを最後まで見ると記録される）,"In the mine, workers signaled with bells and lamps. The light below spells words the island children tapped in Morse code. (N: Signal Notebook. Watch a full cycle to record it.)"
+d_window_night,窓の外の街灯が、ちらちらと瞬いている。古い島だ。電気も古いのだろう。,"The streetlight outside the window flickers. An old island. Old wiring, probably."
+d_neighbor_1,街灯？ ああ、あれは昔から気まぐれでねえ。,"The streetlights? Oh, they've always had a mind of their own."
+d_neighbor_2,……夜は、あんまり出歩かんほうがええよ。よそから来た人は、特にね。,...You'd best not wander at night. Especially folks from outside.
+d_wife_ask,どうしたの、難しい顔して。,What's wrong? You look troubled.
+c_tell_wife,「あの街灯の点滅、SOSに見えるんだ」,"""That streetlight's blinking looks like an SOS."""
+c_keep_quiet,「いや、なんでもない」,"""No, it's nothing."""
+d_wife_confession,……そう。じゃあ、一緒に確かめに行こう。,...I see. Then let's go check it together.
+d_wife_old_lamp,古い街灯だから。気にしすぎだよ。,They're old streetlights. You're overthinking it.
+d_radio_hint,古いラジオだ。夜は遠くの放送が入ることがある。（E：周波数を変える）,An old radio. At night it sometimes picks up distant stations. (E: change frequency)
+goal_arrive_pier,桟橋から島へ上がる,Step off the pier onto the island
+goal_greet_mother,妻の実家にあいさつする,Greet your wife's mother
+goal_visit_museum,炭鉱資料館で灯りの展示を記録する,Record the light exhibit at the mining museum
+goal_go_home,移住先の家に入る,Enter your new home
+goal_first_night,窓の外を見る,Look out the window
+goal_ask_neighbor,近所の人に街灯のことを聞く,Ask a neighbor about the streetlights
+goal_talk_wife,妻と話す,Talk to your wife
+goal_find_regular_lamp,規則的に点滅する街灯を見つけて記録する,Find and record the streetlight with a regular rhythm
+goal_radio_night,ラジオで信号を探す,Search for the signal on the radio
+goal_slice_end,,
+ui_interact,E：調べる,E: Examine
+ui_chapter0,序章　帰郷,Prologue: Homecoming
+ui_chapter1,第一章　点滅,Chapter 1: Blink
+ui_slice_end,第一章　完,End of Chapter 1
+ui_new_game,はじめから,New Game
+ui_continue,つづきから,Continue
+ui_lang,English,日本語
+end_confession,エンディング⑤　打ち明け話,Ending 5: The Confession
+ui_radio_freq,受信中 %s MHz,Tuned to %s MHz

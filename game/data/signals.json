@@ -1,5 +1,30 @@
 {
-  "sos_a": {"text": "SOS", "fist": "daughter_a", "hidden": false, "label_key": "sig_sos_a", "loop_pause_ms": 4000},
-  "museum_hi": {"text": "HI", "fist": "trap", "hidden": false, "label_key": "sig_museum_hi", "loop_pause_ms": 1500},
-  "oldman_nigero": {"text": "NIGERO", "fist": "captive_b", "hidden": true, "label_key": "sig_oldman", "loop_pause_ms": 3000}
+  "sos_a": {
+    "text": "SOS",
+    "fist": "daughter_a",
+    "hidden": false,
+    "label_key": "sig_sos_a",
+    "loop_pause_ms": 4000
+  },
+  "museum_hi": {
+    "text": "HI",
+    "fist": "trap",
+    "hidden": false,
+    "label_key": "sig_museum_hi",
+    "loop_pause_ms": 1500
+  },
+  "oldman_nigero": {
+    "text": "NIGERO",
+    "fist": "captive_b",
+    "hidden": true,
+    "label_key": "sig_oldman",
+    "loop_pause_ms": 3000
+  },
+  "sos_a_radio": {
+    "text": "SOS",
+    "fist": "daughter_a",
+    "hidden": false,
+    "label_key": "sig_sos_a_radio",
+    "loop_pause_ms": 4000
+  }
 }

@@ -24,6 +24,8 @@ func on_cycle_completed(signal_id: StringName, cycle_ms: int) -> bool:
 	return notebook != null and notebook.record(signal_id)
 
 func _ready() -> void:
+	# 発信元は後から作られることがあるので、1フレーム待ってから接続する
+	await get_tree().process_frame
 	for src in get_tree().get_nodes_in_group("signal_sources"):
 		var s := src as SignalSource
 		s.cycle_completed.connect(func(id): on_cycle_completed(id, s.cycle_length_ms()))
@@ -41,7 +43,7 @@ func _process(delta: float) -> void:
 func _perceives(cam: Camera3D, src: SignalSource) -> bool:
 	if src.signal_id == &"":
 		return false
-	var target := src.global_position + Vector3(0, 4.5, 0)
+	var target := src.signal_point()
 	if src is Radio:
 		return (src as Radio).reception() >= RADIO_MIN_RECEPTION and cam.global_position.distance_to(src.global_position) <= RADIO_HEARING_M
 	var to := target - cam.global_position
@@ -49,6 +51,6 @@ func _perceives(cam: Camera3D, src: SignalSource) -> bool:
 		return false
 	if rad_to_deg((-cam.global_basis.z).angle_to(to)) > view_angle_deg:
 		return false
-	var q := PhysicsRayQueryParameters3D.create(cam.global_position, target)
+	var q := PhysicsRayQueryParameters3D.create(cam.global_position, target, 1)
 	var hit := cam.get_world_3d().direct_space_state.intersect_ray(q)
-	return hit.is_empty() or (hit.collider as Node).is_ancestor_of(src) or hit.collider == src
+	return hit.is_empty() or src.is_ancestor_of(hit.collider) or hit.collider == src

@@ -12,3 +12,13 @@ func test_dialogue_box_builds():
 	add_child(b)
 	assert_false(b.visible)
 	b.queue_free()
+
+func test_island_slice_builds():
+	var scene = load("res://scenes/island_slice.tscn").instantiate()
+	add_child(scene)
+	await get_tree().process_frame
+	assert_true(scene.get_node_or_null("Street/LampSOS") is Streetlight)
+	assert_eq(scene.get_node("Street/LampSOS").signal_id, &"sos_a")
+	assert_true(scene.get_node_or_null("House_Home") != null)
+	assert_true(scene.get_node_or_null("Radio") is Radio)
+	scene.queue_free()

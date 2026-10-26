@@ -38,3 +38,10 @@ func test_language_switch_rerenders_entry():
 	TranslationServer.set_locale("en")
 	assert_true(nb.entry_text(state.notebook[0]).contains("Streetlight outside the window"))
 	assert_eq(state.notebook[0]["label_key"], "sig_sos_a")
+
+func test_recorded_signal_emitted():
+	var got := []
+	nb.recorded.connect(func(id): got.append(id))
+	nb.record(&"sos_a")
+	nb.record(&"sos_a")
+	assert_eq(got, [&"sos_a"])

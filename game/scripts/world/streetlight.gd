@@ -27,6 +27,7 @@ func _ready() -> void:
 		var base := head.mesh.surface_get_material(0)
 		_emit_mat = (base.duplicate() if base is StandardMaterial3D else StandardMaterial3D.new())
 		_emit_mat.emission = light_color
+		_emit_mat.emission_energy_multiplier = 4.0
 		head.set_surface_override_material(0, _emit_mat)
 	toggled.connect(_apply)
 	var steady := cycle_length_ms() == 0
@@ -35,6 +36,9 @@ func _ready() -> void:
 	elif steady:
 		is_on = true
 	_apply(is_on)
+
+func signal_point() -> Vector3:
+	return _light.global_position if _light else global_position + Vector3(0, 4.5, 0)
 
 func _apply(on: bool) -> void:
 	_light.visible = on and not always_off

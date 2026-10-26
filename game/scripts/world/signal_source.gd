@@ -35,6 +35,7 @@ func configure_raw(timeline: PackedInt32Array, pause_ms: int) -> void:
 	_update_state()
 
 func _ready() -> void:
+	add_to_group("signal_sources")
 	if _timeline.is_empty() and signal_id != &"" and registry().has(signal_id):
 		configure(registry()[signal_id])
 	var gs := get_node_or_null("/root/GameState")
@@ -48,6 +49,10 @@ func _process(delta: float) -> void:
 	var gs := get_node_or_null("/root/GameState")
 	if gs and signal_id != &"":
 		gs.signal_phase[signal_id] = phase_ms
+
+## 観察者が見る位置（光の出どころ）
+func signal_point() -> Vector3:
+	return global_position
 
 func cycle_length_ms() -> int:
 	return _cycle_ms
