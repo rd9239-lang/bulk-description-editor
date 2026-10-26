@@ -1,0 +1,5 @@
+{
+  "ok": {"text": "SOS", "fist": "trap", "hidden": false, "label_key": "sig_ok", "loop_pause_ms": 1000},
+  "custom": {"text": "HI", "fist": {"unit_ms": 150, "dash_ratio": 3, "char_gap": 3, "word_gap": 7, "jitter": 0}, "hidden": false, "label_key": "sig_custom", "loop_pause_ms": 500},
+  "broken": {"text": "SOS", "fist": "no_such_fist", "hidden": false, "label_key": "sig_broken", "loop_pause_ms": 1000}
+}

@@ -33,6 +33,8 @@ func _initialize() -> void:
 			elif typeof(r) == TYPE_SIGNAL:
 				pass
 			t.after_each()
+			if t._asserts == 0:
+				t._fail("no assertions ran (script error?)")
 			total += 1
 			failed.append_array(t._failures)
 			t.queue_free()
