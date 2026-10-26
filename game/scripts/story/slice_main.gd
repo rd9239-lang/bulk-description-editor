@@ -59,6 +59,7 @@ func _ready() -> void:
 		var h: Array = HOUSES[name]
 		_build_house(name, h[0], h[1], h[2])
 	_build_interiors()
+	MaterialLibrary.apply(self)
 	_build_ui()
 	_show_menu()
 
@@ -91,17 +92,15 @@ func _build_environment() -> void:
 	moon.rotation_degrees = Vector3(-35, 30, 0)
 	add_child(moon)
 
-func _box_body(name: String, size: Vector3, pos: Vector3, color: Color, parent: Node = self) -> StaticBody3D:
+## 箱の地形。look は質感一覧の名前（data/materials.json）
+func _box_body(name: String, size: Vector3, pos: Vector3, look: String, parent: Node = self) -> StaticBody3D:
 	var body := StaticBody3D.new()
 	body.name = name
 	body.position = pos
 	var mi := MeshInstance3D.new()
 	var bm := BoxMesh.new()
 	bm.size = size
-	var m := StandardMaterial3D.new()
-	m.albedo_color = color
-	m.roughness = 0.95
-	bm.material = m
+	bm.material = MaterialLibrary.material(look)
 	mi.mesh = bm
 	body.add_child(mi)
 	var cs := CollisionShape3D.new()
@@ -113,9 +112,9 @@ func _box_body(name: String, size: Vector3, pos: Vector3, color: Color, parent: 
 	return body
 
 func _build_ground() -> void:
-	_box_body("Ground", Vector3(90, 1, 40), Vector3(30, -0.5, 0), Color(0.2, 0.19, 0.17))
-	_box_body("Road", Vector3(74, 0.02, 4), Vector3(31, 0.01, 0), Color(0.12, 0.12, 0.13))
-	_box_body("Pier", Vector3(14, 0.3, 3), Vector3(-9, 0.15, 0), Color(0.3, 0.24, 0.18))
+	_box_body("Ground", Vector3(90, 1, 40), Vector3(30, -0.5, 0), "gravel")
+	_box_body("Road", Vector3(74, 0.02, 4), Vector3(31, 0.01, 0), "asphalt")
+	_box_body("Pier", Vector3(14, 0.3, 3), Vector3(-9, 0.15, 0), "wood_floor")
 	var sea := MeshInstance3D.new()
 	var pm := PlaneMesh.new()
 	pm.size = Vector2(60, 80)

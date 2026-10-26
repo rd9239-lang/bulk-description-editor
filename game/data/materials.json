@@ -1,0 +1,13 @@
+{
+  "asphalt":       {"texture": "asphalt",         "meters": 3.0, "normal_scale": 1.0},
+  "concrete":      {"texture": "concrete",        "meters": 2.0, "aliases": ["concrete"]},
+  "block_wall":    {"texture": "block_wall",      "meters": 0.8},
+  "plank":         {"texture": "wood_weathered",  "meters": 1.2, "aliases": ["plank"]},
+  "plank_dark":    {"texture": "wood_weathered",  "meters": 1.2, "tint": [0.68, 0.64, 0.6], "aliases": ["plank_dark", "crossarm"]},
+  "tin_roof":      {"texture": "corrugated_rust", "meters": 1.0, "metallic": 0.25, "normal_scale": 1.4, "aliases": ["tin_roof"]},
+  "painted_metal": {"texture": "painted_metal",   "meters": 0.5, "metallic": 0.4, "aliases": ["shade_metal"]},
+  "plaster":       {"texture": "plaster",         "meters": 2.0},
+  "gravel":        {"texture": "gravel_dirt",     "meters": 2.0},
+  "wood_floor":    {"texture": "wood_floor",      "meters": 2.0},
+  "tatami":        {"texture": "tatami",          "meters": 0.9, "aliases": ["tatami_floor"]}
+}
