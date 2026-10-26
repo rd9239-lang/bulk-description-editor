@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>影絵 天岩戸</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  html, body { margin: 0; background: #120d0a; }
+  svg { display: block; }
+  .m { font-family: 'Shippori Mincho', serif; font-weight: 800; }
+</style>
+</head>
+<body>
+<svg id="stage" xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<script>
+const S = '#140d09';            // 影の色
+const GOLD = '#e8c46a', IVORY = '#f4ead2';
+const limb = (d, w) => `<path d="${d}" stroke="${S}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+const leaf = (x, y, r, s = 1) => `<ellipse cx="${x}" cy="${y}" rx="${16 * s}" ry="${6 * s}" transform="rotate(${r} ${x} ${y})" fill="${S}"/>`;
+
+// ---- 影（すべて黒）。切り抜き穴は mask で光を通す ----
+let sil = '';
+// 地面
+sil += `<path d="M0,860 Q120,840 240,858 T520,850 T800,862 T1080,850 L1080,960 L0,960Z" fill="${S}"/>`;
+// 岩屋
+sil += `<path d="M690,960 L700,780 L670,700 L710,560 L690,470 L740,380 L770,300 L840,250 L870,190 L960,160 L1010,110 L1080,90 L1080,960Z" fill="${S}"/>`;
+// 榊と鏡・勾玉
+sil += limb('M70,960 C80,800 60,640 95,470', 22);
+sil += limb('M90,560 C130,540 170,520 210,470', 9) + limb('M92,640 C40,610 20,580 10,540', 8) + limb('M95,470 C120,420 150,400 190,392', 8);
+[[210, 470, 30], [190, 455, -20], [225, 490, 50], [10, 540, 70], [25, 560, -10], [175, 392, 20], [150, 404, -30], [60, 450, 10]].forEach(([x, y, r]) => sil += leaf(x, y, r, 1.3));
+sil += limb('M150,512 L150,540', 3) + `<circle cx="150" cy="578" r="38" fill="${S}"/>`;
+sil += limb('M60,600 Q50,640 58,680', 3);
+for (let k = 0; k < 5; k++) sil += `<path d="M${54 + k * 2},${612 + k * 16} a7,7 0 1 1 7,7 q-2,8 -10,10 q4,-6 3,-10z" fill="${S}"/>`;
+// 長鳴鳥（にわとり）
+sil += `<g transform="translate(205,372)"><path d="M0,0 Q-20,-30 6,-46 Q20,-56 30,-44 L44,-40 L30,-34 Q34,-10 20,8 Q40,0 60,-30 Q70,-60 92,-58 Q76,-40 84,-8 Q70,26 30,30 Q6,32 0,0Z" fill="${S}"/>`
+  + `<path d="M8,-46 q2,-14 10,-8 q4,-12 10,-2 q6,-8 8,4z" fill="${S}"/>` + limb('M18,28 L14,50 M30,28 L34,50', 4) + `</g>`;
+// かがり火（色セロハン風）
+sil += limb('M262,858 L338,800 M262,800 L338,858', 12);
+// 神々（笑って見物）
+sil += `<g transform="translate(250,860)"><path d="M-110,0 Q-120,-70 -95,-110 Q-70,-130 -50,-110 Q-30,-70 -40,0Z" fill="${S}"/><circle cx="-76" cy="-150" r="26" fill="${S}"/>`
+  + limb('M-70,-108 Q-30,-150 -20,-200', 18) + limb('M-90,-104 Q-130,-150 -128,-196', 18)
+  + `<path d="M-100,-168 q-14,-26 6,-40 q10,12 2,24z" fill="${S}"/></g>`;
+sil += `<g transform="translate(190,880)"><path d="M-20,0 Q-26,-60 0,-90 Q26,-108 46,-86 Q62,-50 56,0Z" fill="${S}"/><circle cx="20" cy="-124" r="24" transform="rotate(-20 20 -124)" fill="${S}"/>`
+  + limb('M30,-82 Q70,-100 80,-130', 15) + limb('M8,-84 Q40,-110 70,-124', 15) + `</g>`;
+// 伏せた桶
+sil += `<path d="M372,860 L388,712 Q448,700 508,712 L524,860Z" fill="${S}"/>`;
+// 天宇受売命（舞う）
+sil += limb('M452,560 L446,632 L440,712', 16);                        // 軸足
+sil += limb('M468,566 Q520,590 528,612 Q520,640 498,664', 15);         // 上げた足
+sil += `<path d="M436,520 Q420,566 392,618 L404,612 L414,626 L428,612 L440,628 L454,612 L470,626 L482,610 L500,620 Q488,566 482,520Z" fill="${S}"/>`; // 裳
+sil += `<path d="M436,524 Q424,480 438,442 L470,440 Q488,484 482,524Z" fill="${S}"/>`; // 胴
+sil += `<circle cx="446" cy="404" r="25" fill="${S}"/>`;
+sil += limb('M432,392 C400,380 380,400 352,388 C336,380 324,392 312,386', 9) + limb('M430,402 C396,410 386,430 356,428 C340,428 330,440 318,438', 8) + limb('M434,412 C410,430 404,452 380,458', 6);
+sil += limb('M468,450 L506,392 L522,322', 14);                       // 上げた右腕
+sil += limb('M522,322 L560,236', 5);                                   // 笹
+[[560, 236, -60], [548, 252, 30], [572, 252, -20], [540, 272, -40], [566, 274, 20], [554, 222, 70], [578, 232, -70]].forEach(([x, y, r]) => sil += leaf(x, y, r, 1.4));
+sil += limb('M440,452 L392,430 L362,382', 14);                        // 左腕
+sil += `<path d="M392,430 Q360,440 336,500 Q330,520 340,540 Q350,500 372,480 Q384,462 404,446Z" fill="${S}"/>`; // 袖
+sil += `<path d="M506,392 Q540,420 548,470 Q552,492 540,506 Q536,470 516,448 Q500,430 494,412Z" fill="${S}"/>`; // 袖
+sil += limb('M428,446 C470,470 488,440 520,470 C540,486 544,520 536,560', 4); // 日影の蔓
+// 手力男命（岩戸の陰で待つ）
+sil += `<g transform="translate(610,860)"><path d="M-60,0 Q-70,-60 -50,-110 Q-20,-170 30,-160 Q60,-150 62,-100 Q60,-50 40,0Z" fill="${S}"/><circle cx="34" cy="-176" r="28" fill="${S}"/>`
+  + `<path d="M20,-200 q10,-20 24,-6 q4,-16 16,-2 q0,20 -14,24z" fill="${S}"/>`
+  + limb('M40,-130 Q80,-150 92,-180', 26) + limb('M36,-96 Q80,-100 92,-120', 24) + `</g>`;
+
+// ---- 切り抜き穴（光が透ける） ----
+let holes = '';
+holes += `<circle cx="150" cy="578" r="27" fill="black"/><circle cx="150" cy="578" r="19" fill="white"/><path d="M138,566 a16,16 0 0 1 22,-2" stroke="black" stroke-width="3" fill="none"/>`;
+for (let r = 0; r < 2; r++) for (let c = 0; c < 4; c++) holes += `<path d="M${410 + c * 20 + r * 10},${552 + r * 24} l6,-8 l6,8 l-6,8z" fill="black"/>`;
+holes += `<rect x="384" y="740" width="128" height="5" fill="black"/><rect x="380" y="800" width="136" height="5" fill="black"/>`;
+holes += `<circle cx="458" cy="472" r="5" fill="black"/><circle cx="446" cy="490" r="4" fill="black"/>`;
+holes += `<rect x="560" y="808" width="96" height="6" transform="rotate(-4 608 810)" fill="black"/>`;
+holes += `<circle cx="225" cy="337" r="3" fill="black"/>`;
+
+const svg = `
+<defs>
+  <radialGradient id="screen" cx="560" cy="760" r="760" gradientUnits="userSpaceOnUse">
+    <stop offset="0" stop-color="#ffe3a0"/><stop offset=".35" stop-color="#f6b45a"/><stop offset=".75" stop-color="#c9602a"/><stop offset="1" stop-color="#7a2a12"/>
+  </radialGradient>
+  <filter id="soft" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="1.6"/></filter>
+  <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 .4  0 0 0 0 .25  0 0 0 0 .1  0 0 0 .18 0"/></filter>
+  <filter id="fiber"><feTurbulence type="fractalNoise" baseFrequency=".012 .08" numOctaves="2" seed="9"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 .95  0 0 0 0 .85  0 0 0 .12 0"/></filter>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10"/></filter>
+  <filter id="beam"><feGaussianBlur stdDeviation="18"/></filter>
+  <mask id="holes" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="960"><rect width="1080" height="960" fill="white"/>${holes}</mask>
+  <linearGradient id="fire" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffe9a0"/><stop offset=".5" stop-color="#ff8a2a"/><stop offset="1" stop-color="#d4321a" stop-opacity=".85"/></linearGradient>
+  <pattern id="seigaiha" patternUnits="userSpaceOnUse" width="80" height="40"><g fill="none" stroke="${GOLD}" stroke-width="2"><circle cx="40" cy="40" r="38"/><circle cx="40" cy="40" r="28"/><circle cx="40" cy="40" r="18"/><circle cx="0" cy="20" r="38"/><circle cx="80" cy="20" r="38"/></g></pattern>
+  <clipPath id="scr"><rect x="0" y="0" width="1080" height="920"/></clipPath>
+</defs>
+<rect width="1080" height="1920" fill="#120d0a"/>
+<rect y="1560" width="1080" height="360" fill="url(#seigaiha)" opacity=".07"/>
+<text x="540" y="200" font-size="34" class="m" text-anchor="middle" fill="${GOLD}" letter-spacing="8">影絵で見る日本神話</text>
+<text x="540" y="292" font-size="86" class="m" text-anchor="middle" fill="${IVORY}" letter-spacing="10">天岩戸</text>
+<text x="540" y="348" font-size="34" class="m" text-anchor="middle" fill="${GOLD}">『古事記』より</text>
+<g transform="translate(0,380)">
+  <g clip-path="url(#scr)">
+    <rect width="1080" height="920" fill="url(#screen)"/>
+    <rect width="1080" height="920" filter="url(#fiber)"/>
+    <rect width="1080" height="920" filter="url(#paper)"/>
+    <!-- 岩戸のすきまから漏れる光 -->
+    <path d="M720,430 L736,846 L420,920 L180,920Z" fill="#fff6d0" opacity=".55" filter="url(#beam)"/>
+    <!-- 操り棒 -->
+    <g stroke="${S}" stroke-width="3" opacity=".75">
+      <line x1="362" y1="382" x2="330" y2="960"/><line x1="522" y1="322" x2="600" y2="960"/><line x1="680" y1="-40" x2="700" y2="-40"/>
+      <line x1="230" y1="368" x2="250" y2="960"/>
+    </g>
+    <g filter="url(#soft)" mask="url(#holes)">${sil}</g>
+    <!-- 岩戸のすきま -->
+    <path d="M716,440 L730,436 L742,846 L728,850Z" fill="#fff9e0"/>
+    <path d="M716,440 L730,436 L742,846 L728,850Z" fill="#ffe9a0" filter="url(#glow)" opacity=".9"/>
+    <!-- かがり火 -->
+    <g opacity=".92">
+      <path d="M300,812 C262,780 270,740 288,712 C290,738 304,742 300,700 C326,724 346,760 330,800 C342,790 346,776 344,764 C362,792 352,820 300,812Z" fill="url(#fire)"/>
+      <path d="M300,806 C284,790 290,770 300,752 C306,770 318,778 312,796Z" fill="#fff4c0"/>
+    </g>
+    <rect width="1080" height="920" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="60" filter="url(#beam)"/>
+  </g>
+  <rect x="-4" y="-4" width="1088" height="928" fill="none" stroke="#3b2416" stroke-width="14"/>
+  <rect x="-4" y="-12" width="1088" height="4" fill="${GOLD}" opacity=".6"/><rect x="-4" y="924" width="1088" height="4" fill="${GOLD}" opacity=".6"/>
+</g>
+<text x="520" y="1398" font-size="60" class="m" text-anchor="middle" fill="${IVORY}">隠れた太陽の神を</text>
+<text x="520" y="1479" font-size="60" class="m" text-anchor="middle" fill="${IVORY}"><tspan fill="${GOLD}">大宴会</tspan>で誘い出せ</text>
+`;
+document.getElementById('stage').innerHTML = svg;
+</script>
+</body>
+</html>
