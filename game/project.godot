@@ -1,0 +1,9 @@
+; Engine configuration file.
+config_version=5
+
+[application]
+config/name="Streetlight SOS"
+config/features=PackedStringArray("4.3")
+
+[internationalization]
+locale/translations=PackedStringArray("res://i18n/strings.ja.translation", "res://i18n/strings.en.translation")
