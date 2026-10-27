@@ -24,6 +24,9 @@ func _physics_process(_delta: float) -> void:
 		focus_changed.emit(t)
 
 func _unhandled_input(event: InputEvent) -> void:
+	# 会話中などプレイヤーの操作が止まっている間は、E キーを会話の送りに譲る
+	if owner is Player and not (owner as Player).input_enabled:
+		return
 	if event.is_action_pressed("interact") and _focus and _focus.has_method("interact"):
 		_focus.interact(owner)
 		get_viewport().set_input_as_handled()

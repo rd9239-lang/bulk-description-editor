@@ -85,3 +85,61 @@ func test_double_interact_starts_dialogue_once():
 	main._on_interacted(main.get_node("Mother"))
 	await get_tree().create_timer(2.0).timeout
 	assert_eq(starts[0], 1)
+
+func _press_interact() -> void:
+	var ev := InputEventAction.new()
+	ev.action = "interact"
+	ev.pressed = true
+	get_viewport().push_input(ev)
+	var up := InputEventAction.new()
+	up.action = "interact"
+	up.pressed = false
+	get_viewport().push_input(up)
+
+## 実際のキー入力（E）で人に話しかけ、会話を最後まで進められること（不具合の再現テスト）
+func test_talk_with_real_key_presses_until_end():
+	main.flow.complete(&"arrive_pier")
+	var mother: Node3D = main.get_node("Mother")
+	main.player.global_position = Vector3(11, 0.1, 1.6)
+	main.player.look_at(Vector3(11, 0.1, 3.0))
+	main.player.get_node("Head").rotation.x = deg_to_rad(-15)
+	for i in 5:
+		await get_tree().physics_frame
+	_press_interact()
+	var wait := 0.0
+	while not main.dialogue.visible and wait < 3.0:
+		wait += 0.1
+		await get_tree().create_timer(0.1).timeout
+	assert_true(main.dialogue.visible, "dialogue opened")
+	var guard := 0
+	while main.dialogue.visible and guard < 20:
+		guard += 1
+		_press_interact()
+		await get_tree().process_frame
+	assert_false(main.dialogue.visible, "dialogue finished with E presses")
+	assert_true(main.player.input_enabled, "player can move again")
+	assert_eq(main.flow.current_goal(), &"visit_museum")
+
+## ラジオを初めて調べたときのヒント会話も、E キーで最後まで進められること
+func test_radio_hint_dialogue_with_real_key_presses():
+	var box: Node3D = main.get_node("RadioBox")
+	main.player.global_position = Vector3(55.15, 0.1, 5.6)
+	main.player.look_at(Vector3(box.global_position.x, main.player.global_position.y, box.global_position.z))
+	var head: Node3D = main.player.get_node("Head")
+	for i in 3:
+		await get_tree().physics_frame
+	head.rotation.x = atan2(box.global_position.y - head.global_position.y, Vector2(box.global_position.x - head.global_position.x, box.global_position.z - head.global_position.z).length())
+	for i in 5:
+		await get_tree().physics_frame
+	_press_interact()
+	await get_tree().process_frame
+	assert_true(main.dialogue.visible, "hint opened")
+	var freq: float = main.radio.tuned_freq
+	var guard := 0
+	while main.dialogue.visible and guard < 10:
+		guard += 1
+		_press_interact()
+		await get_tree().process_frame
+	assert_false(main.dialogue.visible, "hint closed")
+	assert_eq(main.radio.tuned_freq, freq, "pressing E to read the hint does not retune")
+	assert_true(main.player.input_enabled)

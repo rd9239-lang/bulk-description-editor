@@ -605,10 +605,13 @@ func _on_dialogue_ended(_last: String) -> void:
 	_pending = null
 
 func _tune_radio() -> void:
+	if dialogue.visible:
+		return
 	radio.tuned_freq = 76.0 if radio.tuned_freq >= 95.0 else radio.tuned_freq + 0.5
 	_show_card(tr("ui_radio_freq") % ("%.1f" % radio.tuned_freq), 0.6)
 	if not get_node("/root/GameState").flags.get("radio_hint_seen", false):
 		get_node("/root/GameState").flags["radio_hint_seen"] = true
+		player.input_enabled = false
 		dialogue.open("res://data/dialogue/ch1.json", "radio_hint")
 
 func _play_ending(id: StringName) -> void:
