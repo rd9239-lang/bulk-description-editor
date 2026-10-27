@@ -62,6 +62,9 @@ func _ready() -> void:
 	_build_utilities()
 	_build_interiors()
 	MaterialLibrary.apply(self)
+	var amb := Ambience.new()
+	amb.name = "Ambience"
+	add_child(amb)
 	_build_ui()
 	_show_menu()
 
@@ -250,6 +253,18 @@ func _build_house(name: String, origin: Vector3, front: Array, depth: int) -> vo
 		_piece(house, "Wall_2m", Vector3(0, 0, 1 + j * 2), 90)
 		_piece(house, "Wall_2m", Vector3(w * 2, 0, 1 + j * 2), 90)
 	HouseDetail.add(house, w * 2.0, depth * 2.0, front)
+	# 屋内の範囲：入ると屋外の音がこもる
+	var inside := Area3D.new()
+	inside.name = "Interior"
+	var ics := CollisionShape3D.new()
+	var ibox := BoxShape3D.new()
+	ibox.size = Vector3(w * 2.0 - 0.2, 2.4, depth * 2.0 - 0.2)
+	ics.shape = ibox
+	ics.position = Vector3(w, 1.2, depth)
+	inside.add_child(ics)
+	inside.body_entered.connect(func(b): if b is Player: set_player_indoor(true))
+	inside.body_exited.connect(func(b): if b is Player: set_player_indoor(false))
+	house.add_child(inside)
 	var lamp := OmniLight3D.new()
 	lamp.add_to_group("room_lights")
 	GraphicsSettings.configure_lamp(lamp, GraphicsSettings.quality)
@@ -420,6 +435,13 @@ func _build_interiors() -> void:
 	_area("HomeEntry", Vector3(5, 2.5, 3), Vector3(57, 1.2, 6.5), _enter_home)
 	knock = Knock.new()
 	add_child(knock)
+
+var _indoor_count := 0
+
+## 屋内の範囲への出入り（家どうしが重ならないので、数で管理しておけば十分）
+func set_player_indoor(entered: bool) -> void:
+	_indoor_count = maxi(0, _indoor_count + (1 if entered else -1))
+	AudioMixer.set_indoor(_indoor_count > 0)
 
 func _enter_home() -> void:
 	flow.on_location_entered(&"home")
