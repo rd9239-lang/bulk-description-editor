@@ -37,6 +37,13 @@ xvfb-run godot --path . --rendering-driver opengl3 --resolution 1280x720 -s tool
 - 色の画像しかない写真素材は `python3 tools/textures/import_photo.py --src <画像> --name <フォルダ名>` で、凹凸とツヤを色の濃淡から作って取り込める（`--normal` で凹凸の強さ、`--rough` でツヤの基準値）。
 - 生成のテスト：`python3 tools/textures/test_texgen.py`
 
+## 音
+- `assets/audio/*.ogg` は `tools/audio/generate_sounds.py` で合成したもの（環境音のループ、足音4種×4、街灯のうなり・リレー音、汽笛、驚かせる演出の音、手帳の紙の音）。テスト：`python3 tools/audio/test_sounds.py`
+- 試聴用のミックス：`python3 tools/audio/make_preview.py --out preview.mp3`
+- バス：Outdoor（屋外の音。屋内に入るとこもって小さくなる）、Indoor（部屋の静けさ・ラジオ）、SFX（足音・演出・手帳）
+- 足音は床の当たり判定に付けた `surface` メタ情報（asphalt / gravel / wood / tatami）で切り替わる
+- 録音素材に差し替えるときは、同じファイル名の OGG で上書きする（ループ音はループ再生の設定がコードで有効になる）
+
 ## 調整しやすい場所
 - 信号（文字・打ち癖・休み）：`data/signals.json`
 - 驚かせる演出：`data/scares.json`
