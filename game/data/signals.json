@@ -4,7 +4,7 @@
     "fist": "daughter_a",
     "hidden": false,
     "label_key": "sig_sos_a",
-    "loop_pause_ms": 4000
+    "loop_pause_ms": 3000
   },
   "museum_hi": {
     "text": "HI",
@@ -25,6 +25,6 @@
     "fist": "daughter_a",
     "hidden": false,
     "label_key": "sig_sos_a_radio",
-    "loop_pause_ms": 4000
+    "loop_pause_ms": 3000
   }
 }

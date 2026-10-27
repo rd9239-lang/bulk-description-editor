@@ -43,6 +43,10 @@ var radio: Radio
 var knock: Knock
 
 var _hud_goal: Label
+var _observe_box: VBoxContainer
+var _observe_bar: ProgressBar
+var _toast: Label
+var _toast_tween: Tween
 var _hud_prompt: Label
 var _card: Label
 var _overlay: ColorRect
@@ -201,6 +205,8 @@ func _build_street() -> void:
 		match kind:
 			"sos":
 				lamp.signal_id = &"sos_a"
+				# 古い蛍光灯の青白い光。ほかのオレンジ色の街灯と見分けられるように
+				lamp.light_color = Color(0.78, 0.9, 1.0)
 			"dead":
 				lamp.always_off = true
 			"flicker":
@@ -474,6 +480,35 @@ func _build_ui() -> void:
 	_hud_prompt.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	_hud_prompt.position = Vector2(-60, 40)
 	ui.add_child(_hud_prompt)
+	# 信号を見ているときの「観察中」と記録の進み具合
+	_observe_box = VBoxContainer.new()
+	_observe_box.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	_observe_box.offset_top = -150
+	_observe_box.offset_bottom = -110
+	_observe_box.offset_left = -110
+	_observe_box.offset_right = 110
+	_observe_box.visible = false
+	var ol := Label.new()
+	ol.text = tr("ui_observing")
+	ol.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ol.add_theme_color_override("font_color", Color(0.85, 0.92, 1.0))
+	_observe_box.add_child(ol)
+	_observe_bar = ProgressBar.new()
+	_observe_bar.max_value = 1.0
+	_observe_bar.show_percentage = false
+	_observe_bar.custom_minimum_size = Vector2(220, 6)
+	_observe_box.add_child(_observe_bar)
+	ui.add_child(_observe_box)
+	_toast = Label.new()
+	_toast.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	_toast.offset_top = -200
+	_toast.offset_bottom = -170
+	_toast.offset_left = -200
+	_toast.offset_right = 200
+	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_toast.add_theme_font_size_override("font_size", 22)
+	_toast.visible = false
+	ui.add_child(_toast)
 	notebook = Notebook.new()
 	ui.add_child(notebook)
 	dialogue = DialogueBox.new()
@@ -498,6 +533,7 @@ func _build_ui() -> void:
 	scares = ScareDirector.new()
 	add_child(scares)
 	notebook.recorded.connect(func(id): flow.on_signal_recorded(id))
+	notebook.recorded.connect(func(_id): _show_toast(tr("ui_recorded")))
 	dialogue.runner.ended.connect(_on_dialogue_ended)
 
 func _show_menu() -> void:
@@ -558,10 +594,46 @@ func _start(continue_game: bool) -> void:
 		player.position = Vector3(-14, 0.4, 0)
 		player.rotation_degrees.y = -90
 	add_child(player)
-	(player.get_node("SignalObserver") as SignalObserver).notebook = notebook
+	var obs := player.get_node("SignalObserver") as SignalObserver
+	obs.notebook = notebook
+	obs.observed.connect(_on_signal_observed)
 	(player.get_node("Head/Camera3D/Interactor") as Interactor).focus_changed.connect(_on_focus)
 	_on_goal_changed(flow.current_goal())
 	_show_card(tr("ui_chapter0") if gs.chapter == 0 else tr("ui_chapter1"))
+
+func _process(_delta: float) -> void:
+	_update_observe_hud()
+
+## 信号を見ている間だけ「観察中」と進み具合を出す（記録済みの信号では出さない）
+func _update_observe_hud() -> void:
+	if player == null or _observe_box == null:
+		return
+	var obs := player.get_node("SignalObserver") as SignalObserver
+	var target := obs.current_target()
+	var show := target != &"" and not notebook.has_entry(target) and not dialogue.visible
+	_observe_box.visible = show
+	if show:
+		_observe_bar.value = obs.progress(target)
+
+func _show_toast(text: String) -> void:
+	_toast.text = text
+	_toast.visible = true
+	_toast.modulate.a = 1.0
+	if _toast_tween:
+		_toast_tween.kill()
+	_toast_tween = create_tween()
+	_toast_tween.tween_interval(2.0)
+	_toast_tween.tween_property(_toast, "modulate:a", 0.0, 0.8)
+	_toast_tween.tween_callback(func(): _toast.visible = false)
+
+## 窓の外の SOS を初めて1周期見たとき、主人公が気づく（1回だけ）
+func _on_signal_observed(id: StringName) -> void:
+	var gs: GameStateData = get_node("/root/GameState")
+	if id != &"sos_a" or gs.flags.get("noticed_sos", false) or dialogue.visible:
+		return
+	gs.flags["noticed_sos"] = true
+	player.input_enabled = false
+	dialogue.open("res://data/dialogue/ch0.json", "notice_sos")
 
 func _on_goal_changed(goal: StringName) -> void:
 	_hud_goal.text = tr("goal_%s" % goal)
@@ -606,6 +678,15 @@ func _on_dialogue_ended(_last: String) -> void:
 
 func _tune_radio() -> void:
 	if dialogue.visible:
+		return
+	if not radio.powered:
+		# 1回目は電源を入れるだけ（勝手に雑音が鳴らないように）
+		radio.power_on()
+		_show_toast(tr("ui_radio_on"))
+		if not get_node("/root/GameState").flags.get("radio_hint_seen", false):
+			get_node("/root/GameState").flags["radio_hint_seen"] = true
+			player.input_enabled = false
+			dialogue.open("res://data/dialogue/ch1.json", "radio_hint")
 		return
 	radio.tuned_freq = 76.0 if radio.tuned_freq >= 95.0 else radio.tuned_freq + 0.5
 	_show_card(tr("ui_radio_freq") % ("%.1f" % radio.tuned_freq), 0.6)

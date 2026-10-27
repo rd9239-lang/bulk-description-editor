@@ -29,7 +29,7 @@ func _ready() -> void:
 	var room := AudioStreamPlayer.new()
 	room.name = "RoomTone"
 	room.stream = AudioMixer.load_loop(AUDIO % "amb_room")
-	room.volume_db = -14.0
+	room.volume_db = -22.0
 	room.bus = AudioMixer.INDOOR
 	room.autoplay = true
 	add_child(room)

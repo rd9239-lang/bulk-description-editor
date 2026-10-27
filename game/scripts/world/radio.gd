@@ -7,10 +7,15 @@ const MIX_RATE := 22050.0
 
 @export var station_freq := 81.7
 var tuned_freq := 76.0
+## 調べて電源を入れるまでは鳴らない
+var powered := false
 
 var _player: AudioStreamPlayer3D
 var _playback: AudioStreamGeneratorPlayback
 var _tone_phase := 0.0
+
+func power_on() -> void:
+	powered = true
 
 func reception() -> float:
 	var off := absf(tuned_freq - station_freq)
@@ -37,8 +42,11 @@ func _process(delta: float) -> void:
 		return
 	var r := reception()
 	for i in _playback.get_frames_available():
-		var s := randf_range(-1.0, 1.0) * 0.25 * (1.0 - r)
+		if not powered:
+			_playback.push_frame(Vector2.ZERO)
+			continue
+		var s := randf_range(-1.0, 1.0) * 0.1 * (1.0 - r)
 		if is_on:
-			s += sin(_tone_phase * TAU) * 0.5 * r
+			s += sin(_tone_phase * TAU) * 0.35 * r
 		_tone_phase = fmod(_tone_phase + TONE_HZ / MIX_RATE, 1.0)
 		_playback.push_frame(Vector2(s, s))

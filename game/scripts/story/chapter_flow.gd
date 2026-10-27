@@ -48,6 +48,16 @@ func complete(goal_id: StringName) -> void:
 		saver.save_slot(0, state)
 		chapter_changed.emit(1)
 	goal_changed.emit(current_goal())
+	_complete_if_already_recorded()
+
+## 次の目標の信号がもう手帳にあれば、その場で完了させる（先に記録していても詰まらないように）
+func _complete_if_already_recorded() -> void:
+	for sid in SIGNAL_GOALS:
+		if SIGNAL_GOALS[sid] == current_goal():
+			for e in state.notebook:
+				if e["signal_id"] == sid:
+					complete(current_goal())
+					return
 
 func on_signal_recorded(signal_id: StringName) -> void:
 	if SIGNAL_GOALS.has(signal_id):

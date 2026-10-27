@@ -53,5 +53,10 @@
     "speaker_key": "spk_none",
     "text_key": "d_food",
     "next": null
+  },
+  "notice_sos": {
+    "speaker_key": "spk_me",
+    "text_key": "d_notice_sos",
+    "next": null
   }
 }

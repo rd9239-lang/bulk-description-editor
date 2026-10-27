@@ -29,4 +29,4 @@ func test_cycle_ms_is_timeline_plus_pause():
 	var sum := 0
 	for ms in d.fist.timeline(d.text, 5):
 		sum += ms
-	assert_eq(d.cycle_ms(5), sum + 4000)
+	assert_eq(d.cycle_ms(5), sum + 3000)

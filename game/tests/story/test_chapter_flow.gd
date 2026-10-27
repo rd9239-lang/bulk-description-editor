@@ -78,3 +78,10 @@ func test_goal_completed_signal():
 	flow.goal_completed.connect(func(id): got.append(id))
 	flow.complete(&"arrive_pier")
 	assert_eq(got, [&"arrive_pier"])
+
+func test_goal_for_already_recorded_signal_completes_on_arrival():
+	# プロローグで窓から SOS を記録済みでも、第1章の目標で詰まらないこと
+	state.notebook.append({"signal_id": &"sos_a", "label_key": "sig_sos_a", "decoded": true})
+	_run_to(&"talk_wife")
+	flow.complete(&"talk_wife")
+	assert_eq(flow.current_goal(), &"radio_night")

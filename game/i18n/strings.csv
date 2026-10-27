@@ -35,7 +35,6 @@ goal_go_home,移住先の家に入る,Enter your new home
 goal_first_night,窓の外を見る,Look out the window
 goal_ask_neighbor,近所の人に街灯のことを聞く,Ask a neighbor about the streetlights
 goal_talk_wife,妻と話す,Talk to your wife
-goal_find_regular_lamp,規則的に点滅する街灯を見つけて記録する,Find and record the streetlight with a regular rhythm
 goal_radio_night,ラジオで信号を探す,Search for the signal on the radio
 goal_slice_end,,
 ui_interact,E：調べる,E: Examine
@@ -52,3 +51,8 @@ d_drawer,古い箪笥。前の住人が置いていったものらしい。一�
 d_food,保存食が箱ごと置いてある。船が止まると、この島には何日も物が届かない。,"A crate of preserved food. When the ferry stops, nothing reaches this island for days."
 ui_quality_high,画質：高,Graphics: High
 ui_quality_low,画質：低,Graphics: Low
+ui_observing,観察中…,Observing…
+ui_recorded,手帳に記録した（N）,Recorded in notebook (N)
+ui_radio_on,ラジオの電源を入れた,Radio switched on
+d_notice_sos,……規則的だ。短く3回、長く3回、また短く3回。,"...It's regular. Three short, three long, three short again."
+goal_find_regular_lamp,窓から見えた、規則的に点滅する街灯を探して記録する,Find and record the steadily blinking streetlight you saw from the window

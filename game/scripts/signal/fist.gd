@@ -22,11 +22,11 @@ static func make(u: float, d: float, c: float, w: float, j: float) -> Fist:
 
 ## 本物の娘（A）
 static func daughter_a() -> Fist:
-	return make(220.0, 3.6, 3.4, 7.5, 0.12)
+	return make(300.0, 3.6, 3.4, 7.5, 0.12)
 
 ## 坑道の手前にいた女性（B）。Aから教わったので癖が近い
 static func captive_b() -> Fist:
-	return make(220.0, 3.3, 3.4, 7.5, 0.10)
+	return make(300.0, 3.3, 3.4, 7.5, 0.10)
 
 ## 罠のSOS。癖がなく正確すぎる
 static func trap() -> Fist:
