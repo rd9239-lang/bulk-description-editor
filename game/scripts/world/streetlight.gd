@@ -10,6 +10,8 @@ extends SignalSource
 var _light: SpotLight3D
 var _halo: OmniLight3D
 var _emit_mat: StandardMaterial3D
+var _buzz: AudioStreamPlayer3D
+var _relay: AudioStreamPlayer3D
 
 func _ready() -> void:
 	super._ready()
@@ -32,6 +34,26 @@ func _ready() -> void:
 		_halo.position = Vector3(0, 4.5, 0)
 	parent.add_child(_light)
 	parent.add_child(_halo)
+	# 安定器のうなり（点いている間だけ）と、信号を送る街灯だけリレーの「カチッ」
+	_buzz = AudioStreamPlayer3D.new()
+	_buzz.name = "Buzz"
+	_buzz.stream = AudioMixer.load_loop("res://assets/audio/lamp_buzz.ogg")
+	_buzz.volume_db = -18.0
+	_buzz.unit_size = 1.2
+	_buzz.max_distance = 12.0
+	_buzz.bus = AudioMixer.OUTDOOR
+	_buzz.position = _light.position
+	parent.add_child(_buzz)
+	if signal_id != &"":
+		_relay = AudioStreamPlayer3D.new()
+		_relay.name = "Relay"
+		_relay.stream = load("res://assets/audio/lamp_click.ogg")
+		_relay.volume_db = -6.0
+		_relay.unit_size = 3.0
+		_relay.max_distance = 30.0
+		_relay.bus = AudioMixer.OUTDOOR
+		_relay.position = _light.position
+		parent.add_child(_relay)
 	apply_quality(GraphicsSettings.quality)
 	var head := find_child("LampHead", true, false) as MeshInstance3D
 	if head and head.mesh:
@@ -40,7 +62,7 @@ func _ready() -> void:
 		_emit_mat.emission = light_color
 		_emit_mat.emission_energy_multiplier = 6.0
 		head.set_surface_override_material(0, _emit_mat)
-	toggled.connect(_apply)
+	toggled.connect(_on_toggled)
 	var steady := cycle_length_ms() == 0
 	if always_off:
 		is_on = false
@@ -54,9 +76,20 @@ func apply_quality(q: StringName) -> void:
 func signal_point() -> Vector3:
 	return _light.global_position if _light else global_position + Vector3(0, 4.5, 0)
 
+func _on_toggled(on: bool) -> void:
+	if _relay and not always_off:
+		_relay.play()
+	_apply(on)
+
 func _apply(on: bool) -> void:
 	var lit := on and not always_off
 	_light.visible = lit
 	_halo.visible = lit
 	if _emit_mat:
 		_emit_mat.emission_enabled = lit
+	# stream_paused は 3D の再生では効かないことがあるので、再生／停止で切り替える
+	if _buzz and lit != _buzz.playing:
+		if lit:
+			_buzz.play()
+		else:
+			_buzz.stop()

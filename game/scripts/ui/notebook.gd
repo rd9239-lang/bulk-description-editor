@@ -63,6 +63,11 @@ func try_manual_decode(signal_id: StringName, guess: String) -> bool:
 
 func _ready() -> void:
 	visible = false
+	var page := AudioStreamPlayer.new()
+	page.name = "PageSound"
+	page.stream = load("res://assets/audio/ui_page.ogg")
+	page.bus = AudioMixer.SFX
+	add_child(page)
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var bg := ColorRect.new()
 	bg.color = Color(0.08, 0.07, 0.06, 0.92)
@@ -79,11 +84,16 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("open_notebook"):
-		visible = not visible
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if visible else Input.MOUSE_MODE_CAPTURED
-		if visible:
-			_rebuild()
+		toggle()
 		get_viewport().set_input_as_handled()
+
+## 手帳を開く／閉じる（開くときに紙の音）
+func toggle() -> void:
+	visible = not visible
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if visible else Input.MOUSE_MODE_CAPTURED
+	if visible:
+		_rebuild()
+		($PageSound as AudioStreamPlayer).play()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_TRANSLATION_CHANGED and _list:

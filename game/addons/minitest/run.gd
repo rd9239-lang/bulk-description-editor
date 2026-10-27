@@ -28,6 +28,8 @@ func _initialize() -> void:
 			var t: GutTest = script.new()
 			root.add_child(t)
 			t._current = "%s::%s" % [path.get_file(), name]
+			if OS.has_environment("MINITEST_VERBOSE"):
+				print("RUN ", t._current)
 			await t.before_each()
 			await t.call(name)
 			await t.after_each()

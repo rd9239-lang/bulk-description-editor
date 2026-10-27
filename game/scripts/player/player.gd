@@ -14,6 +14,8 @@ const MOUSE_SENS := 0.0025
 
 var input_enabled := true
 var _bob_t := 0.0
+var _last_step := -1
+var _footsteps: Footsteps
 
 ## 歩くときの視点の揺れ（x: 左右、y: 上下、メートル）。止まっていれば 0
 static func bob_offset(t: float, speed: float) -> Vector2:
@@ -26,6 +28,9 @@ static func bob_offset(t: float, speed: float) -> Vector2:
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	hand_light.visible = false
+	_footsteps = Footsteps.new()
+	_footsteps.name = "Footsteps"
+	add_child(_footsteps)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not input_enabled:
@@ -52,5 +57,18 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	var flat := Vector2(velocity.x, velocity.z).length()
 	_bob_t = _bob_t + delta if flat > 0.1 else 0.0
+	if flat > 0.1 and is_on_floor():
+		var si := Footsteps.step_index(_bob_t)
+		if si != _last_step:
+			_last_step = si
+			_footsteps.play_step(_surface_below(), crouching)
+	else:
+		_last_step = -1
 	var o := bob_offset(_bob_t, flat)
 	camera.position = camera.position.lerp(Vector3(o.x, o.y, 0), 0.25)
+
+func _surface_below() -> String:
+	var q := PhysicsRayQueryParameters3D.create(global_position + Vector3.UP * 0.3, global_position + Vector3.DOWN * 0.4)
+	q.exclude = [get_rid()]
+	var hit := get_world_3d().direct_space_state.intersect_ray(q)
+	return Footsteps.surface_for(hit.get("collider"))

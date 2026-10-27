@@ -83,7 +83,18 @@ static func _flat(parent: Node3D, name: String, size: Vector3, pos: Vector3, loo
 	return mi
 
 static func _alley(parent: Node3D) -> void:
-	_flat(parent, "AlleyPave", Vector3(4.0, 0.02, 10.0), Vector3(ALLEY_X, 0.012, -7.0), "asphalt")
+	# 路地の舗装（歩ける。足音はアスファルト）
+	var pave := StaticBody3D.new()
+	pave.name = "AlleyPave"
+	pave.position = Vector3(ALLEY_X, 0.012, -7.0)
+	pave.set_meta("surface", "asphalt")
+	parent.add_child(pave)
+	var pm_mesh := _flat(pave, "Mesh", Vector3(4.0, 0.02, 10.0), Vector3.ZERO, "asphalt")
+	var pcs := CollisionShape3D.new()
+	var pshape := BoxShape3D.new()
+	pshape.size = Vector3(4.0, 0.02, 10.0)
+	pcs.shape = pshape
+	pave.add_child(pcs)
 	_flat(parent, "StopLine", Vector3(3.6, 0.006, 0.3), Vector3(ALLEY_X, 0.025, -2.75), "road_paint")
 	var mark := MeshInstance3D.new()
 	mark.name = "StopMarking"

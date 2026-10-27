@@ -26,6 +26,7 @@ func _ready() -> void:
 	gen.mix_rate = MIX_RATE
 	_player = AudioStreamPlayer3D.new()
 	_player.stream = gen
+	_player.bus = AudioMixer.INDOOR
 	add_child(_player)
 	_player.play()
 	_playback = _player.get_stream_playback()

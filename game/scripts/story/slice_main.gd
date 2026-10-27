@@ -120,9 +120,9 @@ func _box_body(name: String, size: Vector3, pos: Vector3, look: String, parent: 
 
 func _build_ground() -> void:
 	# 陸地は x=-1 の岸まで。その先は海で、桟橋は杭の上に立つ
-	_box_body("Ground", Vector3(76, 1, 40), Vector3(37, -0.5, 0), "gravel")
-	_box_body("Road", Vector3(69, 0.02, 4), Vector3(33.5, 0.01, 0), "asphalt")
-	_box_body("Pier", Vector3(15, 0.3, 3), Vector3(-8.5, 0.15, 0), "wood_floor")
+	_box_body("Ground", Vector3(76, 1, 40), Vector3(37, -0.5, 0), "gravel").set_meta("surface", "gravel")
+	_box_body("Road", Vector3(69, 0.02, 4), Vector3(33.5, 0.01, 0), "asphalt").set_meta("surface", "asphalt")
+	_box_body("Pier", Vector3(15, 0.3, 3), Vector3(-8.5, 0.15, 0), "wood_floor").set_meta("surface", "wood")
 	_build_shore()
 	var sea := MeshInstance3D.new()
 	sea.name = "Sea"
@@ -289,6 +289,7 @@ func _piece(parent: Node3D, kind: String, pos: Vector3, rot_y: float) -> void:
 			_col(body, Vector3(0.9, 0.7, 0.12), Vector3(0, 2.25, 0))
 		"Floor_2m":
 			_col(body, Vector3(2, 0.05, 2), Vector3(0, 0.025, 0))
+			body.set_meta("surface", "tatami")
 		"Roof_Tile_2m":
 			_col(body, Vector3(2, 0.05, 2), Vector3(0, 0.025, 0))
 		"Wall_Window_2m":

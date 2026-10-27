@@ -23,6 +23,15 @@ func on_goal_completed(goal_id: StringName) -> void:
 			scare_played.emit(s["id"])
 
 func _play(s: Dictionary) -> void:
+	if s.has("sound") and is_inside_tree():
+		var st := get_node_or_null("Stinger") as AudioStreamPlayer
+		if st == null:
+			st = AudioStreamPlayer.new()
+			st.name = "Stinger"
+			st.bus = AudioMixer.SFX
+			add_child(st)
+		st.stream = load("res://assets/audio/%s.ogg" % s["sound"])
+		st.play()
 	if s["kind"] == "figure_under_lamp" and is_inside_tree():
 		var scene := get_parent() if get_parent() else get_tree().current_scene
 		var lamp := scene.get_node_or_null(s.get("lamp_path", "")) as SignalSource
