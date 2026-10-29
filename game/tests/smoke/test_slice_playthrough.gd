@@ -48,7 +48,7 @@ func test_full_slice_reaches_end():
 	assert_false(get_node("/root/GameState").told_wife)
 	main.notebook.record(&"sos_a")
 	main.notebook.record(&"sos_a_radio")
-	assert_eq(flow.current_goal(), &"slice_end")
+	assert_eq(flow.current_goal(), &"ch2_phone")
 
 func test_inactive_goal_npc_does_not_talk():
 	main._on_interacted(main.get_node("Neighbor"))

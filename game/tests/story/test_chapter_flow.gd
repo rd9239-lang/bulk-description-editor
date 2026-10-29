@@ -45,7 +45,7 @@ func test_lamp_and_radio_signals():
 	flow.on_signal_recorded(&"sos_a")
 	assert_eq(flow.current_goal(), &"radio_night")
 	flow.on_signal_recorded(&"sos_a_radio")
-	assert_eq(flow.current_goal(), &"slice_end")
+	assert_eq(flow.current_goal(), &"ch2_phone")
 
 func test_chapter_change_saves():
 	_run_to(&"first_night")
@@ -85,3 +85,53 @@ func test_goal_for_already_recorded_signal_completes_on_arrival():
 	_run_to(&"talk_wife")
 	flow.complete(&"talk_wife")
 	assert_eq(flow.current_goal(), &"radio_night")
+
+func test_entering_chapter2_sets_dusk_and_saves():
+	var tods := []
+	flow.time_of_day_changed.connect(func(t): tods.append(t))
+	var chapters := []
+	flow.chapter_changed.connect(func(c): chapters.append(c))
+	_run_to(&"ch2_phone")
+	assert_eq(state.chapter, 2)
+	assert_eq(state.flags.get("time_of_day"), "dusk")
+	assert_true(saver.has_save(0))
+	assert_eq(tods, [&"dusk"])
+	assert_eq(chapters, [1, 2])
+
+func test_night_starts_at_call_mother():
+	var tods := []
+	flow.time_of_day_changed.connect(func(t): tods.append(t))
+	_run_to(&"ch2_call_mother")
+	assert_eq(state.flags.get("time_of_day"), "night")
+	assert_eq(tods, [&"dusk", &"night"])
+	assert_eq(ChapterFlow.GOALS[ChapterFlow.NIGHT_START], &"ch2_call_mother")
+	assert_eq(ChapterFlow.time_of_day_for(ChapterFlow.NIGHT_START - 1), &"dusk")
+	assert_eq(ChapterFlow.time_of_day_for(ChapterFlow.CHAPTER2_START), &"dusk")
+	assert_eq(ChapterFlow.time_of_day_for(0), &"night")
+	assert_eq(ChapterFlow.time_of_day_for(ChapterFlow.NIGHT_START), &"night")
+
+func test_ruins_needs_board_and_letter():
+	_run_to(&"ch2_ruins")
+	state.set_value("read_board", true)
+	assert_eq(flow.current_goal(), &"ch2_ruins")
+	state.relics_found.append(&"letter")
+	state.changed.emit()
+	assert_eq(flow.current_goal(), &"ch2_call_mother")
+
+func test_ruins_letter_first_then_board():
+	_run_to(&"ch2_ruins")
+	state.relics_found.append(&"letter")
+	state.changed.emit()
+	assert_eq(flow.current_goal(), &"ch2_ruins")
+	state.set_value("read_board", true)
+	assert_eq(flow.current_goal(), &"ch2_call_mother")
+
+func test_earphone_signal_completes_goal():
+	_run_to(&"ch2_earphone")
+	flow.on_signal_recorded(&"sos_a_earphone")
+	assert_eq(flow.current_goal(), &"ch2_window")
+
+func test_end_is_terminal():
+	_run_to(&"ch2_end")
+	flow.complete(&"ch2_end")
+	assert_eq(flow.current_goal(), &"ch2_end")
