@@ -556,6 +556,13 @@ func _start(continue_game: bool) -> void:
 	gs.reset()
 	if continue_game:
 		get_node("/root/SaveSystem").load_slot(0)
+	var idx := int(gs.flags.get("goal_index", 0))
+	# v3 のセーブ（第1章を終えたところ）は、第2章の始めとして読む
+	if idx >= ChapterFlow.CHAPTER2_START and gs.chapter < 2:
+		gs.chapter = 2
+		gs.flags["time_of_day"] = "dusk"
+	TimeOfDay.apply(self, StringName(gs.flags.get("time_of_day", ChapterFlow.time_of_day_for(idx))))
+	ch2.restore(idx)
 	_menu.visible = false
 	_overlay.visible = false
 	add_child(flow)
@@ -564,7 +571,6 @@ func _start(continue_game: bool) -> void:
 	flow.chapter_changed.connect(func(c): _show_card(tr("ui_chapter%d" % c)))
 	flow.ending_triggered.connect(func(id): _pending_ending = id)
 	player = PLAYER.instantiate()
-	var idx := int(gs.flags.get("goal_index", 0))
 	if idx >= 3:
 		player.position = Vector3(56.5, 0.1, 6.5)
 	elif idx == 2:
@@ -578,7 +584,7 @@ func _start(continue_game: bool) -> void:
 	obs.observed.connect(_on_signal_observed)
 	(player.get_node("Head/Camera3D/Interactor") as Interactor).focus_changed.connect(_on_focus)
 	_on_goal_changed(flow.current_goal())
-	_show_card(tr("ui_chapter0") if gs.chapter == 0 else tr("ui_chapter1"))
+	_show_card(tr("ui_chapter%d" % gs.chapter))
 
 func _process(_delta: float) -> void:
 	_update_observe_hud()

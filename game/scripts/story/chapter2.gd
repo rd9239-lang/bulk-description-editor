@@ -176,6 +176,17 @@ func _on_goal_completed(goal: StringName) -> void:
 		&"ch2_dorm":
 			start_following(DORM_DOOR)
 
+## 「つづきから」：保存した目標に合わせて、東の道・つきまとい・拾った遺品を戻す
+func restore(idx: int) -> void:
+	var gs: GameStateData = main.get_node("/root/GameState")
+	if gs.flags.get("east_open", false):
+		EastDistrict.set_east_open(main, true)
+	if idx > ChapterFlow.GOALS.find(&"ch2_dorm"):
+		start_following(DORM_DOOR)
+	for n in get_children():
+		if n is Interactable and n.relic_id != &"" and n.relic_id in gs.relics_found:
+			n.queue_free()
+
 func open_east() -> void:
 	main.get_node("/root/GameState").flags["east_open"] = true
 	EastDistrict.set_east_open(main, true)
