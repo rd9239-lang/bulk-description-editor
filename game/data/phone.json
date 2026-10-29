@@ -1,0 +1,4 @@
+[
+  {"id": "bank_address", "trigger": "goal_completed:ch2_phone", "sender_key": "ph_bank", "text_key": "ph_bank_address", "photo": false},
+  {"id": "sns_like", "trigger": "goal_completed:ch2_window", "sender_key": "ph_sns", "text_key": "ph_sns_like", "post_key": "ph_sns_post", "photo": true}
+]
