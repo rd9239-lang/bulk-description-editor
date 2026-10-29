@@ -8,8 +8,6 @@ signal observed(signal_id: StringName)
 
 const REQUIRED := 0.95
 const LOOK_AWAY_MS := 1500
-const RADIO_MIN_RECEPTION := 0.8
-const RADIO_HEARING_M := 6.0
 
 @export var max_distance := 40.0
 @export var view_angle_deg := 25.0
@@ -77,9 +75,8 @@ func _perceives(cam: Camera3D, src: SignalSource) -> bool:
 	if src.signal_id == &"":
 		return false
 	var target := src.signal_point()
-	if src is Radio:
-		var r := src as Radio
-		return r.powered and r.reception() >= RADIO_MIN_RECEPTION and cam.global_position.distance_to(src.global_position) <= RADIO_HEARING_M
+	if src is AudibleSource:
+		return (src as AudibleSource).heard_from(cam.global_position)
 	var to := target - cam.global_position
 	if to.length() > max_distance:
 		return false

@@ -57,3 +57,13 @@ func assert_does_not_have(container, item, msg := "") -> void:
 	_count()
 	if container.has(item):
 		_fail("expected %s not to contain %s %s" % [str(container), str(item), msg])
+
+func assert_gt(v, than, msg := "") -> void:
+	_count()
+	if not (v > than):
+		_fail("expected %s > %s %s" % [v, than, msg])
+
+func assert_lt(v, than, msg := "") -> void:
+	_count()
+	if not (v < than):
+		_fail("expected %s < %s %s" % [v, than, msg])

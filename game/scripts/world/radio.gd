@@ -1,6 +1,6 @@
 ## ラジオ。周波数を合わせると信号のビープが聞こえ、外れると雑音になる。
 class_name Radio
-extends SignalSource
+extends AudibleSource
 
 const TONE_HZ := 600.0
 const MIX_RATE := 22050.0
@@ -14,8 +14,15 @@ var _player: AudioStreamPlayer3D
 var _playback: AudioStreamGeneratorPlayback
 var _tone_phase := 0.0
 
+func _init() -> void:
+	hearing_range = 6.0
+
 func power_on() -> void:
 	powered = true
+
+## 電源が入っていて、局にほぼ合っているときだけ信号が聞き取れる
+func audible() -> bool:
+	return powered and reception() >= 0.8
 
 func reception() -> float:
 	var off := absf(tuned_freq - station_freq)

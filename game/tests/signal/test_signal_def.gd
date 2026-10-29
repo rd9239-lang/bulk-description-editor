@@ -2,7 +2,8 @@ extends GutTest
 
 func test_loads_game_signals():
 	var defs := SignalDef.load_all("res://data/signals.json")
-	assert_eq(defs.size(), 4)
+	assert_eq(defs.size(), 5)
+	assert_has(defs, &"sos_a_earphone")
 	assert_has(defs, &"sos_a")
 	assert_has(defs, &"sos_a_radio")
 	assert_has(defs, &"museum_hi")

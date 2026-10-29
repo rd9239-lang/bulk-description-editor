@@ -26,5 +26,12 @@
     "hidden": false,
     "label_key": "sig_sos_a_radio",
     "loop_pause_ms": 3000
+  },
+  "sos_a_earphone": {
+    "text": "SOS",
+    "fist": "daughter_a",
+    "hidden": false,
+    "label_key": "sig_sos_a_earphone",
+    "loop_pause_ms": 3000
   }
 }
