@@ -45,3 +45,18 @@ func test_scene_ambience_and_interiors():
 	assert_true(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Outdoor")) < -6.0)
 	scene.set_player_indoor(false)
 	scene.queue_free()
+
+func test_dusk_changes_insect_and_wind_volume():
+	var amb := Ambience.new()
+	add_child(amb)
+	amb.set_time_of_day(&"dusk")
+	assert_almost_eq((amb.get_node("Insects0") as AudioStreamPlayer3D).volume_db, -14.0, 0.01)
+	assert_almost_eq((amb.get_node("Wind") as AudioStreamPlayer).volume_db, -12.0, 0.01)
+	amb.set_time_of_day(&"night")
+	assert_almost_eq((amb.get_node("Insects0") as AudioStreamPlayer3D).volume_db, -8.0, 0.01)
+	assert_almost_eq((amb.get_node("Wind") as AudioStreamPlayer).volume_db, -16.0, 0.01)
+	amb.queue_free()
+
+func test_chapter2_sound_files_exist():
+	for n in ["phone_vibrate", "finger_tap", "earphone_static", "power_down"]:
+		assert_true(ResourceLoader.exists("res://assets/audio/%s.ogg" % n), n)

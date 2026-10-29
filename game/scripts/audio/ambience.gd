@@ -9,6 +9,19 @@ const INSECT_SPOTS := [Vector3(4, 0.2, 7), Vector3(18, 0.2, -9), Vector3(30, 0.2
 var _rng := RandomNumberGenerator.new()
 var _horn_timer: Timer
 
+const INSECTS_DB := {&"night": -8.0, &"dusk": -14.0}
+const WIND_DB := {&"night": -16.0, &"dusk": -12.0}
+
+## 夕方は虫が少なく風が強め、夜は虫がよく鳴く
+func set_time_of_day(tod: StringName) -> void:
+	for i in INSECT_SPOTS.size():
+		var p := get_node_or_null("Insects%d" % i) as AudioStreamPlayer3D
+		if p:
+			p.volume_db = INSECTS_DB.get(tod, -8.0)
+	var w := get_node_or_null("Wind") as AudioStreamPlayer
+	if w:
+		w.volume_db = WIND_DB.get(tod, -16.0)
+
 static func next_horn_delay(rng: RandomNumberGenerator) -> float:
 	return rng.randf_range(35.0, 80.0)
 

@@ -75,6 +75,31 @@ def test_lamp_buzz_has_mains_hum():
     assert abs(peak_f - 120) < 3 or abs(peak_f - 240) < 3, peak_f
 
 
+def test_chapter2_sounds_exist_with_expected_lengths():
+    sounds = generate_sounds.render_all(quick=True)
+    lengths = {"phone_vibrate": (1.4, 1.9), "finger_tap": (0.08, 0.25), "power_down": (2.2, 3.0)}
+    for name, (lo, hi) in lengths.items():
+        assert name in sounds, name
+        assert lo <= len(sounds[name]) / SR <= hi, (name, len(sounds[name]) / SR)
+    assert "earphone_static" in generate_sounds.LOOPS
+
+
+def test_phone_vibrate_is_a_low_buzz():
+    x = generate_sounds.render_all(quick=True)["phone_vibrate"]
+    spec = np.abs(np.fft.rfft(x))
+    f = np.fft.rfftfreq(len(x), 1 / SR)
+    band = (f > 50) & (f < 2000)
+    peak_f = f[band][np.argmax(spec[band])]
+    assert 140 <= peak_f <= 210, peak_f
+
+
+def test_power_down_fades_away():
+    x = generate_sounds.render_all(quick=True)["power_down"]
+    rms = lambda a: np.sqrt(np.mean(a ** 2))  # noqa: E731
+    q = len(x) // 4
+    assert rms(x[:q]) > 4 * rms(x[-q:])
+
+
 def test_write_ogg():
     with tempfile.TemporaryDirectory() as d:
         p = os.path.join(d, "t.ogg")

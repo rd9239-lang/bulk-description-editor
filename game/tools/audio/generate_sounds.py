@@ -95,12 +95,27 @@ def lamp_buzz(dur, seed=5):
     return normalize(buzz * 0.8 + sizzle * 0.12, 0.6)
 
 
+def earphone_static(dur, seed=10):
+    """イヤホンに入る雑音：細い帯域のザー音、電源の 50Hz のうなり、ときどきのプツッという音。"""
+    n = int(dur * SR)
+    t = t_axis(n)
+    hiss = periodic_noise(n, seed, "white", band=(300, 4000)) * (0.7 + 0.3 * periodic_lfo(n, max(2, int(dur * 2)), 0.5))
+    hum = 0.6 * np.sin(2 * np.pi * 50 * t) + 0.3 * np.sin(2 * np.pi * 150 * t)
+    crackle = np.zeros(n)
+    rng = np.random.default_rng(seed)
+    for _ in range(int(dur * 6)):
+        g = periodic_noise(200, int(rng.integers(1e6)), "white") * np.exp(-np.arange(200) / 25)
+        wrap_add(crackle, int(rng.integers(n)), g * rng.uniform(0.3, 1.0))
+    return normalize(hiss * 0.5 + hum * 0.25 + crackle * 0.4, 0.6)
+
+
 LOOPS = {
     "amb_waves": (waves, 24.0),
     "amb_wind": (wind, 30.0),
     "amb_insects": (insects, 20.0),
     "amb_room": (room_tone, 10.0),
     "lamp_buzz": (lamp_buzz, 4.0),
+    "earphone_static": (earphone_static, 6.0),
 }
 
 
@@ -187,6 +202,36 @@ def ui_page(seed=9):
     return normalize(bandpass(crinkle, 1800, 9000, periodic=False) * 0.6 + swish * 0.5, 0.6)
 
 
+def phone_vibrate(seed=11):
+    """机の上で震えるスマホ：170Hz 前後のモーターのうなりを 0.4秒ずつ2回、天板がかすかに鳴る。"""
+    n = int(1.6 * SR)
+    t = t_axis(n)
+    gate = (((t > 0.1) & (t < 0.5)) | ((t > 0.75) & (t < 1.15))).astype(float)
+    gate = np.convolve(gate, np.ones(220) / 220, mode="same")
+    motor = np.sin(2 * np.pi * 170 * t + 0.4 * np.sin(2 * np.pi * 23 * t))
+    rattle = bandpass(periodic_noise(n, seed, "white"), 1500, 5000, periodic=False) * (0.5 + 0.5 * np.sign(np.sin(2 * np.pi * 170 * t)))
+    return normalize((motor * 0.8 + rattle * 0.15) * gate, 0.7)
+
+
+def finger_tap(seed=12):
+    """指先で木を叩く軽い「コツ」。"""
+    n = int(0.15 * SR)
+    t = t_axis(n)
+    modes = sum(np.sin(2 * np.pi * f * t) * _env(n, 0.0005, d) for f, d in ((880, 0.018), (1650, 0.01), (2900, 0.006)))
+    tick = bandpass(periodic_noise(n, seed, "white"), 2000, 8000, periodic=False) * _env(n, 0.0003, 0.002)
+    return normalize(modes * 0.7 + tick * 0.3, 0.6)
+
+
+def power_down(seed=13):
+    """灯りが落ちる「ブツン」と、うなりが低くなりながら消えていく音。"""
+    n = int(2.5 * SR)
+    t = t_axis(n)
+    thunk = (np.sin(2 * np.pi * 55 * t) * 0.9 + bandpass(periodic_noise(n, seed, "white"), 100, 3000, periodic=False) * 0.4) * _env(n, 0.002, 0.08)
+    freq = 120 * np.exp(-t / 1.2) + 30
+    hum = np.sin(2 * np.pi * np.cumsum(freq) / SR) * np.exp(-t / 0.5) * 0.5
+    return normalize(reverb(thunk + hum, 1.2, 0.3, periodic=False), 0.85)
+
+
 def fade_out(x, seconds=0.03):
     """一発ものの末尾をなめらかに消す（途中で切れたときのプチッという音を防ぐ）。"""
     n = min(len(x), int(seconds * SR))
@@ -200,7 +245,8 @@ def render_all(quick=False):
     out = {}
     for name, (fn, dur) in LOOPS.items():
         out[name] = fn(min(dur, 3.0) if quick else dur)
-    shots = {"lamp_click": lamp_click(), "ship_horn": ship_horn(), "stinger": stinger(), "ui_page": ui_page()}
+    shots = {"lamp_click": lamp_click(), "ship_horn": ship_horn(), "stinger": stinger(), "ui_page": ui_page(),
+             "phone_vibrate": phone_vibrate(), "finger_tap": finger_tap(), "power_down": power_down()}
     for s in SURFACES:
         for i in range(STEP_VARIATIONS):
             shots[f"step_{s}_{i}"] = footstep(s, i)
