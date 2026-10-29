@@ -19,7 +19,12 @@ func after_each():
 func _talk(npc_name: String, choice := -1) -> void:
 	var npc: Interactable = main.get_node(npc_name)
 	main._on_interacted(npc)
+	var waited := 0
 	while not main.dialogue.visible:
+		waited += 1
+		if waited > 600:
+			assert_true(false, "dialogue for %s never opened (goal=%s pending=%s)" % [npc_name, main.flow.current_goal(), main._pending])
+			return
 		await get_tree().process_frame
 	var guard := 0
 	while main.dialogue.visible and guard < 50:

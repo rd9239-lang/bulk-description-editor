@@ -3,22 +3,27 @@ class_name Radio
 extends AudibleSource
 
 const TONE_HZ := 600.0
-const MIX_RATE := 22050.0
+const STATIC := "res://assets/audio/earphone_static.ogg"
+## 雑音と信号音の最大の大きさ（0〜1）
+const STATIC_GAIN := 0.17
+const TONE_GAIN := 1.0
+const RESYNC_S := 0.08
 
 @export var station_freq := 81.7
 var tuned_freq := 76.0
 ## 調べて電源を入れるまでは鳴らない
 var powered := false
 
-var _player: AudioStreamPlayer3D
-var _playback: AudioStreamGeneratorPlayback
-var _tone_phase := 0.0
+var _static: AudioStreamPlayer3D
+var _tone: AudioStreamPlayer3D
 
 func _init() -> void:
 	hearing_range = 6.0
 
 func power_on() -> void:
 	powered = true
+	if is_inside_tree() and _tone:
+		_start_sound()
 
 ## 電源が入っていて、局にほぼ合っているときだけ信号が聞き取れる
 func audible() -> bool:
@@ -34,26 +39,40 @@ func reception() -> float:
 
 func _ready() -> void:
 	super._ready()
-	var gen := AudioStreamGenerator.new()
-	gen.mix_rate = MIX_RATE
-	_player = AudioStreamPlayer3D.new()
-	_player.stream = gen
-	_player.bus = AudioMixer.INDOOR
-	add_child(_player)
-	_player.play()
-	_playback = _player.get_stream_playback()
+	_static = _make_player("Static")
+	if ResourceLoader.exists(STATIC):
+		_static.stream = AudioMixer.load_loop(STATIC)
+	_tone = _make_player("Tone")
+	_tone.stream = SignalTone.make_loop(_timeline, _pause_ms, TONE_HZ)
+	cycle_completed.connect(func(_id): _resync())
+	if powered:
+		_start_sound()
+
+func _make_player(name: String) -> AudioStreamPlayer3D:
+	var p := AudioStreamPlayer3D.new()
+	p.name = name
+	p.bus = AudioMixer.INDOOR
+	p.volume_db = -80.0
+	add_child(p)
+	return p
+
+func _start_sound() -> void:
+	if _static.stream:
+		_static.play()
+	_tone.play(phase_ms / 1000.0)
+	_update_volume()
+
+## 信号音のループが点滅とずれてきたら合わせ直す
+func _resync() -> void:
+	if powered and _tone.playing and absf(_tone.get_playback_position() - phase_ms / 1000.0) > RESYNC_S:
+		_tone.play(phase_ms / 1000.0)
+
+func _update_volume() -> void:
+	var r := reception()
+	_static.volume_db = linear_to_db(maxf(STATIC_GAIN * (1.0 - r), 0.0005))
+	_tone.volume_db = linear_to_db(maxf(TONE_GAIN * r, 0.0005))
 
 func _process(delta: float) -> void:
 	super._process(delta)
-	if _playback == null:
-		return
-	var r := reception()
-	for i in _playback.get_frames_available():
-		if not powered:
-			_playback.push_frame(Vector2.ZERO)
-			continue
-		var s := randf_range(-1.0, 1.0) * 0.1 * (1.0 - r)
-		if is_on:
-			s += sin(_tone_phase * TAU) * 0.35 * r
-		_tone_phase = fmod(_tone_phase + TONE_HZ / MIX_RATE, 1.0)
-		_playback.push_frame(Vector2(s, s))
+	if powered and _tone:
+		_update_volume()
