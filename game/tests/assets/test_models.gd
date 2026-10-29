@@ -44,3 +44,10 @@ func test_street_props_contract():
 	var man := n.find_child("Mannequin_F", true, false) as MeshInstance3D
 	assert_between(man.get_aabb().size.y, 1.5, 1.7)
 	n.free()
+
+func test_east_props_contract():
+	var n := _inst("res://assets/models/east_props.glb")
+	if n == null: return
+	for name in ["Barrier", "Bench", "Kettle", "Stove", "Phone", "Memo", "NoticeBoard", "LongTable", "LongBench", "Switchboard", "Locker", "OldWire", "Chimney", "RoofBroken", "BoardedWindow"]:
+		assert_true(n.find_child(name, true, false) != null, name)
+	n.free()

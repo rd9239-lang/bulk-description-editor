@@ -65,6 +65,7 @@ func _ready() -> void:
 	StreetDressing.build(self)
 	_build_utilities()
 	_build_interiors()
+	EastDistrict.build(self)
 	MaterialLibrary.apply(self)
 	var amb := Ambience.new()
 	amb.name = "Ambience"
@@ -105,22 +106,7 @@ func apply_quality(q: StringName) -> void:
 
 ## 箱の地形。look は質感一覧の名前（data/materials.json）
 func _box_body(name: String, size: Vector3, pos: Vector3, look: String, parent: Node = self) -> StaticBody3D:
-	var body := StaticBody3D.new()
-	body.name = name
-	body.position = pos
-	var mi := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = size
-	bm.material = MaterialLibrary.material(look)
-	mi.mesh = bm
-	body.add_child(mi)
-	var cs := CollisionShape3D.new()
-	var shape := BoxShape3D.new()
-	shape.size = size
-	cs.shape = shape
-	body.add_child(cs)
-	parent.add_child(body)
-	return body
+	return BuildUtil.box_body(parent, name, size, pos, look)
 
 func _build_ground() -> void:
 	# 陸地は x=-1 の岸まで。その先は海で、桟橋は杭の上に立つ
@@ -231,15 +217,7 @@ func _build_street() -> void:
 	StreetDressing.wire(street, Vector3(56.7, 8.3, -4.4), Vector3(59.0, 2.75, 3.6), 0.35)
 
 func _add_pole_collision(parent: Node3D, radius: float, height: float) -> void:
-	var body := StaticBody3D.new()
-	var cs := CollisionShape3D.new()
-	var shape := CylinderShape3D.new()
-	shape.radius = radius
-	shape.height = height
-	cs.shape = shape
-	cs.position.y = height / 2
-	body.add_child(cs)
-	parent.add_child(body)
+	BuildUtil.pole_collision(parent, radius, height)
 
 ## 正面（道路側、ローカル z=0）を部品で、奥と側面を壁で囲う。屋根などは HouseDetail。
 func _build_house(name: String, origin: Vector3, front: Array, depth: int) -> void:
@@ -313,12 +291,7 @@ func _piece(parent: Node3D, kind: String, pos: Vector3, rot_y: float) -> void:
 			_col(body, Vector3(2, 2.6, 0.12), Vector3(0, 1.3, 0))
 
 func _col(body: StaticBody3D, size: Vector3, pos: Vector3) -> void:
-	var cs := CollisionShape3D.new()
-	var shape := BoxShape3D.new()
-	shape.size = size
-	cs.shape = shape
-	cs.position = pos
-	body.add_child(cs)
+	BuildUtil.col(body, size, pos)
 
 func _npc(name: String, pos: Vector3, color: Color, file: String, node: String, goal: StringName, completes: StringName, knock_kind := "") -> Interactable:
 	var npc := Interactable.new()
