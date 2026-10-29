@@ -49,3 +49,10 @@ func test_ground_extends_east():
 	await get_tree().physics_frame
 	var hit := main.get_world_3d().direct_space_state.intersect_ray(q)
 	assert_false(hit.is_empty(), "ground under the far end of the road")
+
+func test_building_windows_are_visible_panes():
+	var panes := main.get_node("East/Dorm").find_children("Pane*", "MeshInstance3D", true, false)
+	assert_gt(panes.size(), 3)
+	for p in panes:
+		var m := ((p as MeshInstance3D).mesh as BoxMesh).material as StandardMaterial3D
+		assert_eq(m.albedo_color.a, 1.0, "opaque dark pane, not see-through glass")

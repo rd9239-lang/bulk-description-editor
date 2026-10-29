@@ -136,10 +136,13 @@ static func _dorm(east: Node3D, main: Node3D) -> void:
 	BuildUtil.box_body(d, "Roof", Vector3(12.4, 0.2, 8.4), Vector3(78, 6.1, 9), c)
 	BuildUtil.box_body(d, "Floor", Vector3(11.6, 0.05, 7.6), Vector3(78, 0.025, 9), "wood_floor").set_meta("surface", "wood")
 	BuildUtil.box_body(d, "Canopy", Vector3(2.4, 0.1, 1.2), Vector3(78, 2.6, 4.4), c)
+	var pane := 0
 	for x in [73.8, 76.2, 79.8, 82.2]:
-		_glass(d, Vector3(1.2, 1.0, 0.04), Vector3(x, 4.4, 4.98))
+		_pane(d, "Pane%d" % pane, Vector3(1.2, 1.0, 0.04), Vector3(x, 4.4, 4.97))
+		pane += 1
 	for x in [74.5, 81.5]:
-		_glass(d, Vector3(1.4, 1.0, 0.04), Vector3(x, 1.6, 4.98))
+		_pane(d, "Pane%d" % pane, Vector3(1.4, 1.0, 0.04), Vector3(x, 1.6, 4.97))
+		pane += 1
 	# 外階段（右側の壁沿いに2階へ）
 	for i in 10:
 		BuildUtil.box_body(d, "Step%d" % i, Vector3(1.0, 0.3, 0.6), Vector3(84.7, 0.15 + i * 0.3, 6.0 + i * 0.6), c)
@@ -197,7 +200,7 @@ static func _plant(east: Node3D, main: Node3D) -> void:
 	var roof := BuildUtil.box_body(p, "Roof", Vector3(14.6, 0.1, 12.6), Vector3(121, 7.05, -12), "tin_roof")
 	roof.rotation_degrees.z = 3
 	for x in [116.5, 120.5, 124.5]:
-		_glass(p, Vector3(2.4, 0.8, 0.04), Vector3(x + 0.5, 5.6, -5.83))
+		_pane(p, "Pane%d" % int(x), Vector3(2.4, 0.8, 0.04), Vector3(x + 0.5, 5.6, -5.83))
 	prop(p, "Switchboard", "Switchboard", Vector3(121, 0.05, -17.6), 0, Vector3(2.4, 2.0, 0.3))
 	prop(p, "OldWire", "OldWire", Vector3(124, 0.05, -17.7), 0)
 	prop(p, "Locker", "Locker", Vector3(114.5, 0.05, -12), 90, Vector3(0.9, 1.8, 0.5))
@@ -205,11 +208,13 @@ static func _plant(east: Node3D, main: Node3D) -> void:
 	_room_light(p, Vector3(121, 5.0, -12), Color(0.85, 0.92, 1.0), 1.2, 12.0)
 	BuildUtil.indoor_area(p, "Interior", Vector3(13.6, 6, 11.6), Vector3(121, 3, -12), main)
 
-static func _glass(parent: Node3D, size: Vector3, pos: Vector3) -> void:
+## 窓ガラス（中は見えない、暗く光を返す板）
+static func _pane(parent: Node3D, name: String, size: Vector3, pos: Vector3) -> void:
 	var mi := MeshInstance3D.new()
+	mi.name = name
 	var bm := BoxMesh.new()
 	bm.size = size
-	bm.material = MaterialLibrary.material("glass")
+	bm.material = MaterialLibrary.material("window_dark")
 	mi.mesh = bm
 	mi.position = pos
 	parent.add_child(mi)

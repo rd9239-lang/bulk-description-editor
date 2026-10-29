@@ -145,3 +145,12 @@ func test_chapter2_people_absent_before_chapter2():
 	assert_false(main.get_node("Ch2/Memo").visible)
 	assert_false(main.ch2.follower.active)
 	assert_true(main.get_node("East/Barrier").visible)
+
+func test_observe_hud_hidden_while_photo_post_open():
+	var obs: SignalObserver = main.player.get_node("SignalObserver")
+	obs.set_cycle(&"sos_a", 10000)
+	obs.tick(3000, [&"sos_a"])
+	var img := Image.create(64, 40, false, Image.FORMAT_RGB8)
+	main.ch2.popup.show_note(main.ch2.feed.note(&"sns_like"), ImageTexture.create_from_image(img))
+	main._update_observe_hud()
+	assert_false(main._observe_box.visible)

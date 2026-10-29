@@ -25,5 +25,6 @@
   "paper": {"color": [0.86, 0.83, 0.74, 1.0], "roughness": 0.95, "aliases": ["paper"]},
   "phone_body": {"color": [0.03, 0.03, 0.035, 1.0], "roughness": 0.25, "aliases": ["phone_body"]},
   "phone_screen": {"color": [0.02, 0.03, 0.05, 1.0], "roughness": 0.05, "specular": 0.8, "aliases": ["phone_screen"]},
-  "porcelain": {"color": [0.85, 0.85, 0.82, 1.0], "roughness": 0.3, "aliases": ["porcelain"]}
+  "porcelain": {"color": [0.85, 0.85, 0.82, 1.0], "roughness": 0.3, "aliases": ["porcelain"]},
+  "window_dark": {"color": [0.07, 0.08, 0.1, 1.0], "roughness": 0.12, "specular": 0.8}
 }

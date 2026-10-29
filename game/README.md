@@ -1,4 +1,4 @@
-# 街灯のSOS（縦切り試作：序章＋第1章）
+# 街灯のSOS（試作：序章＋第1章＋第2章）
 
 ## 遊び方（Godot 4.3）
 1. Godot 4.3 でこのフォルダ（`game/`）を開く
@@ -19,11 +19,12 @@ blender -b -P tools/blender/build_streetlight.py -- --out assets/models/streetli
 # または Blender を Python モジュール（pip install bpy）として:
 python3 tools/blender/build_streetlight.py --out assets/models/streetlight.glb
 ```
-`build_pole.py`、`build_house_kit.py`、`build_street_props.py`（ブロック塀・側溝のふた・カーブミラー・室外機・ガスメーター・仮の人物）も同様です。
+`build_pole.py`、`build_house_kit.py`、`build_street_props.py`（ブロック塀・側溝のふた・カーブミラー・室外機・ガスメーター・仮の人物）、`build_east_props.py`（第2章：工事柵・ベンチ・やかん・スマホ・掲示板・長机・配電盤・ロッカー・古い線・煙突・崩れた屋根・板でふさいだ窓）も同様です。
 
 ## 画面確認（スクリーンショット）
 ```bash
 xvfb-run godot --path . --rendering-driver opengl3 --resolution 1280x720 -s tools/capture.gd -- <出力先> [ja|en]
+xvfb-run godot --path . --resolution 1280x720 -s tools/capture_ch2.gd -- <出力先> [ja|en]   # 第2章
 ```
 
 ## 画質
@@ -47,5 +48,8 @@ xvfb-run godot --path . --rendering-driver opengl3 --resolution 1280x720 -s tool
 ## 調整しやすい場所
 - 信号（文字・打ち癖・休み）：`data/signals.json`
 - 驚かせる演出：`data/scares.json`
-- 会話：`data/dialogue/ch0.json`, `ch1.json`、文言は `i18n/strings.csv`（日本語・英語）
-- 街灯や家の配置：`scripts/story/slice_main.gd` の `LAMPS` と `HOUSES`
+- 会話：`data/dialogue/ch0.json`, `ch1.json`, `ch2.json`、文言は `i18n/strings.csv`（日本語・英語）
+- 街灯や家の配置：`scripts/story/slice_main.gd` の `LAMPS` と `HOUSES`、東地区（第2章）は `scripts/world/east_district.gd`
+- 第2章の人物・調べる物・演出の位置：`scripts/story/chapter2.gd`
+- スマホの通知：`data/phone.json`、遺品：`data/relics.json`
+- 目標の順番と、夕方・夜の切り替わり：`scripts/story/chapter_flow.gd`

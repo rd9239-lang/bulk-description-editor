@@ -595,7 +595,7 @@ func _update_observe_hud() -> void:
 		return
 	var obs := player.get_node("SignalObserver") as SignalObserver
 	var target := obs.current_target()
-	var show := target != &"" and not notebook.has_entry(target) and not dialogue.visible
+	var show := target != &"" and not notebook.has_entry(target) and not dialogue.visible and not (ch2 and ch2.popup.is_post_open())
 	_observe_box.visible = show
 	if show:
 		_observe_bar.value = obs.progress(target)

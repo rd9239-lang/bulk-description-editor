@@ -10,7 +10,7 @@ static func capture(scene: Node3D, cam_pos: Vector3, target: Vector3, stand_in_p
 	vp.size = SIZE
 	vp.render_target_update_mode = SubViewport.UPDATE_ONCE
 	var cam := Camera3D.new()
-	cam.fov = 50.0
+	cam.fov = 34.0
 	vp.add_child(cam)
 	scene.add_child(vp)
 	cam.global_position = cam_pos
