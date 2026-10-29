@@ -1,6 +1,7 @@
 ## 街灯。子に streetlight.glb（LampHead / LightAnchor）を持ち、点灯状態を光と発光に反映する。
 ## 下向きのスポットライトで路面を照らし（霧の中に光の円すいが浮かぶ）、灯具のまわりは小さな点光源で明るくする。
 ## signal_id も Flicker もなければ常時点灯。always_off なら消えたまま。
+## 島の電気が落ちている間（powered = false）は消え、戻ると元の点き方（点滅も）を続ける。
 class_name Streetlight
 extends SignalSource
 
@@ -12,9 +13,11 @@ var _halo: OmniLight3D
 var _emit_mat: StandardMaterial3D
 var _buzz: AudioStreamPlayer3D
 var _relay: AudioStreamPlayer3D
+var powered := true
 
 func _ready() -> void:
 	super._ready()
+	add_to_group("streetlights")
 	var anchor := find_child("LightAnchor", true, false) as Node3D
 	_light = SpotLight3D.new()
 	_light.light_color = light_color
@@ -76,13 +79,17 @@ func apply_quality(q: StringName) -> void:
 func signal_point() -> Vector3:
 	return _light.global_position if _light else global_position + Vector3(0, 4.5, 0)
 
+func set_power(on: bool) -> void:
+	powered = on
+	_apply(is_on)
+
 func _on_toggled(on: bool) -> void:
-	if _relay and not always_off:
+	if _relay and not always_off and powered:
 		_relay.play()
 	_apply(on)
 
 func _apply(on: bool) -> void:
-	var lit := on and not always_off
+	var lit := on and not always_off and powered
 	_light.visible = lit
 	_halo.visible = lit
 	if _emit_mat:
