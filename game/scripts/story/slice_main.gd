@@ -96,7 +96,7 @@ func _build_environment() -> void:
 ## 画質の切り替え（環境・月の影・街灯と室内灯の影）
 func apply_quality(q: StringName) -> void:
 	GraphicsSettings.quality = q
-	($WorldEnv as WorldEnvironment).environment = GraphicsSettings.build_environment(q)
+	($WorldEnv as WorldEnvironment).environment = GraphicsSettings.build_environment(q, TimeOfDay.current)
 	($Moon as DirectionalLight3D).shadow_enabled = q == &"high"
 	for lamp in find_children("*", "Streetlight", true, false):
 		(lamp as Streetlight).apply_quality(q)

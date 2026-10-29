@@ -6,28 +6,31 @@ const SKY_SHADER := preload("res://shaders/night_sky.gdshader")
 
 static var quality: StringName = &"high"
 
-static func build_environment(q: StringName) -> Environment:
+## tod：時間帯（&"night" / &"dusk"）。夕方は明るめで暖色の薄い霞、星と月は出さない
+static func build_environment(q: StringName, tod: StringName = &"night") -> Environment:
 	var high := q == &"high"
+	var dusk := tod == &"dusk"
 	var env := Environment.new()
 	var sky := Sky.new()
 	var sm := ShaderMaterial.new()
 	sm.shader = SKY_SHADER
+	sm.set_shader_parameter("dusk", 1.0 if dusk else 0.0)
 	sky.sky_material = sm
 	env.background_mode = Environment.BG_SKY
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.22, 0.27, 0.4)
-	env.ambient_light_energy = 0.45
+	env.ambient_light_color = Color(0.42, 0.38, 0.4) if dusk else Color(0.22, 0.27, 0.4)
+	env.ambient_light_energy = 0.6 if dusk else 0.45
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
-	env.tonemap_exposure = 1.7
+	env.tonemap_exposure = 2.1 if dusk else 1.7
 	env.tonemap_white = 6.0
 	env.glow_enabled = true
 	env.glow_intensity = 0.9
 	env.glow_bloom = 0.05
 	env.glow_hdr_threshold = 0.9
 	env.fog_enabled = true
-	env.fog_light_color = Color(0.045, 0.055, 0.08)
-	env.fog_density = 0.006 if high else 0.02
+	env.fog_light_color = Color(0.32, 0.24, 0.22) if dusk else Color(0.045, 0.055, 0.08)
+	env.fog_density = (0.006 if high else 0.02) * (0.6 if dusk else 1.0)
 	env.fog_sky_affect = 0.25
 	env.adjustment_enabled = true
 	env.adjustment_contrast = 1.08
