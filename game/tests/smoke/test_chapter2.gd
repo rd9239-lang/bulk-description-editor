@@ -154,3 +154,9 @@ func test_observe_hud_hidden_while_photo_post_open():
 	main.ch2.popup.show_note(main.ch2.feed.note(&"sns_like"), ImageTexture.create_from_image(img))
 	main._update_observe_hud()
 	assert_false(main._observe_box.visible)
+
+func test_radio_is_off_on_the_new_day():
+	main._tune_radio()
+	assert_true(main.radio.powered)
+	await _jump_to(&"ch2_phone")
+	assert_false(main.radio.powered, "the radio left on last night is off in the morning")

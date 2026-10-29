@@ -157,6 +157,8 @@ func on_goal_changed(goal: StringName) -> void:
 	enter_chapter2()
 	if goal == &"ch2_phone":
 		_vibrate_timer.start()
+		# 朝：ゆうべ点けたままのラジオは切れている
+		main.radio.power_off()
 	else:
 		_vibrate_timer.stop()
 	if idx >= ChapterFlow.GOALS.find(&"ch2_earphone"):

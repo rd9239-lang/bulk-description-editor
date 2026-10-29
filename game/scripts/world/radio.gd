@@ -25,6 +25,12 @@ func power_on() -> void:
 	if is_inside_tree() and _tone:
 		_start_sound()
 
+func power_off() -> void:
+	powered = false
+	if _tone:
+		_tone.stop()
+		_static.stop()
+
 ## 電源が入っていて、局にほぼ合っているときだけ信号が聞き取れる
 func audible() -> bool:
 	return powered and reception() >= 0.8
