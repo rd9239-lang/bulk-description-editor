@@ -1,10 +1,12 @@
 ## 決められたタイミングの驚かせる演出。各演出は1回だけ再生する。
 ## 街灯の下の人影は、少し間をおいてから「灯りが点いていて、こちらから見えている」瞬間に初めて姿を見せ、
 ## そのとき音が鳴る（見ていないところで鳴らない）。一度見られたあと目をそらすか、決まった周期が過ぎると消える。
+## それ以外の種類（停電、窓の写真など）は custom_scare で章の進行役に渡し、音もそちらが play_sound で鳴らす。
 class_name ScareDirector
 extends Node
 
 signal scare_played(scare_id: String)
+signal custom_scare(scare: Dictionary)
 
 ## 記録してから人影が立つまでの秒数
 @export var appear_delay := 1.5
@@ -36,16 +38,18 @@ func _play(s: Dictionary) -> void:
 	if not is_inside_tree():
 		return
 	var sound: String = s.get("sound", "")
-	if s["kind"] == "figure_under_lamp":
-		var scene := get_parent() if get_parent() else get_tree().current_scene
-		var lamp := scene.get_node_or_null(s.get("lamp_path", "")) as SignalSource
-		if lamp:
-			_figure_under(lamp, int(s.get("cycles", 3)), sound)
-			return
+	if s["kind"] != "figure_under_lamp":
+		custom_scare.emit(s)
+		return
+	var scene := get_parent() if get_parent() else get_tree().current_scene
+	var lamp := scene.get_node_or_null(s.get("lamp_path", "")) as SignalSource
+	if lamp:
+		_figure_under(lamp, int(s.get("cycles", 3)), sound)
+		return
 	# 人影を立てる場所がなければ、音だけすぐ鳴らす
-	_stinger(sound)
+	play_sound(sound)
 
-func _stinger(sound: String) -> void:
+func play_sound(sound: String) -> void:
 	if sound == "":
 		return
 	var st := get_node_or_null("Stinger") as AudioStreamPlayer
@@ -89,7 +93,7 @@ func _process(delta: float) -> void:
 			if f["wait"] <= 0.0 and seen:
 				f["revealed"] = true
 				_face_camera(fig)
-				_stinger(f["sound"])
+				play_sound(f["sound"])
 		else:
 			f["away"] = 0.0 if seen or not lamp.is_on else f["away"] + delta
 			if f["away"] > LOOK_AWAY_S or f["cycles_left"] <= 0:

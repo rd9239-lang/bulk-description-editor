@@ -1,3 +1,5 @@
 [
-  {"id": "ch1_figure", "trigger": "goal_completed:find_regular_lamp", "kind": "figure_under_lamp", "lamp_path": "Street/LampSOS", "cycles": 2, "sound": "stinger"}
+  {"id": "ch1_figure", "trigger": "goal_completed:find_regular_lamp", "kind": "figure_under_lamp", "lamp_path": "Street/LampSOS", "cycles": 2, "sound": "stinger"},
+  {"id": "ch2_blackout", "trigger": "goal_completed:ch2_earphone", "kind": "blackout", "lamp_path": "East/PlantLamp", "sound": "stinger"},
+  {"id": "ch2_window_photo", "trigger": "goal_completed:ch2_window", "kind": "window_photo"}
 ]
