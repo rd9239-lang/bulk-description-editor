@@ -1,0 +1,5 @@
+[
+  {"id": "watch", "name_key": "relic_watch", "desc_key": "relic_watch_desc"},
+  {"id": "letter", "name_key": "relic_letter", "desc_key": "relic_letter_desc"},
+  {"id": "nametag", "name_key": "relic_nametag", "desc_key": "relic_nametag_desc"}
+]

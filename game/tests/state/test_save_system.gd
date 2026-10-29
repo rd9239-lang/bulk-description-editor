@@ -77,3 +77,33 @@ func test_has_save():
 	saver.save_slot(0, s)
 	assert_true(saver.has_save(0))
 	s.free()
+
+func test_relics_and_phone_survive_save():
+	var state := GameStateData.new()
+	state.relics_found = [&"watch", &"letter"] as Array[StringName]
+	state.relics = 2
+	state.phone = [&"bank_address"] as Array[StringName]
+	saver.save_slot(0, state)
+	var s2 := GameStateData.new()
+	saver.load_slot(0, s2)
+	assert_eq(s2.relics_found, [&"watch", &"letter"] as Array[StringName])
+	assert_eq(s2.relics, 2)
+	assert_eq(s2.phone, [&"bank_address"] as Array[StringName])
+	assert_true(s2.phone[0] is StringName)
+	state.free(); s2.free()
+
+func test_old_save_without_new_fields_loads():
+	var s := GameStateData.new()
+	s.from_dict({"chapter": 1, "flags": {}, "notebook": []})
+	assert_eq(s.relics_found.size(), 0)
+	assert_eq(s.phone.size(), 0)
+	s.free()
+
+func test_reset_clears_relics_and_phone():
+	var s := GameStateData.new()
+	s.relics_found = [&"watch"] as Array[StringName]
+	s.phone = [&"bank_address"] as Array[StringName]
+	s.reset()
+	assert_eq(s.relics_found.size(), 0)
+	assert_eq(s.phone.size(), 0)
+	s.free()

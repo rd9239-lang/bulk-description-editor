@@ -15,6 +15,10 @@ var flags := {}
 var notebook: Array[Dictionary] = []
 ## signal_id -> 周期内の経過 ms
 var signal_phase := {}
+## 届いたスマホの通知（ID）
+var phone: Array[StringName] = []
+## 拾った遺品（ID）。relics はその数
+var relics_found: Array[StringName] = []
 
 func reset() -> void:
 	chapter = 0
@@ -26,6 +30,8 @@ func reset() -> void:
 	flags = {}
 	notebook = []
 	signal_phase = {}
+	phone = []
+	relics_found = []
 	changed.emit()
 
 ## GameState のフィールドか flags に値を書く（会話の "set" から使う）
@@ -49,6 +55,8 @@ func to_dict() -> Dictionary:
 		"chapter": chapter, "told_wife": told_wife, "followed_signal": String(followed_signal),
 		"relics": relics, "old_man_alive": old_man_alive, "found_daughter": found_daughter,
 		"flags": flags, "notebook": nb, "signal_phase": phases,
+		"phone": Array(phone).map(func(x): return String(x)),
+		"relics_found": Array(relics_found).map(func(x): return String(x)),
 	}
 
 func from_dict(d: Dictionary) -> void:
@@ -62,8 +70,17 @@ func from_dict(d: Dictionary) -> void:
 	notebook = []
 	for e in d.get("notebook", []):
 		notebook.append({"signal_id": StringName(e["signal_id"]), "label_key": String(e["label_key"]), "decoded": bool(e["decoded"])})
+	phone = _names(d.get("phone", []))
+	relics_found = _names(d.get("relics_found", []))
 	# 読み込み後は全信号を周期の最初から再開する
 	signal_phase = {}
 	for k in d.get("signal_phase", {}):
 		signal_phase[StringName(k)] = 0
 	changed.emit()
+
+static func _names(list) -> Array[StringName]:
+	var out: Array[StringName] = []
+	if typeof(list) == TYPE_ARRAY:
+		for x in list:
+			out.append(StringName(x))
+	return out

@@ -12,6 +12,8 @@ signal interacted(target: Interactable)
 @export var completes_goal: StringName = &""
 ## 調べる前に鳴らすノック（"island" / "normal" / ""）
 @export var knock := ""
+## 調べると拾える遺品（data/relics.json の id）
+@export var relic_id: StringName = &""
 
 func _ready() -> void:
 	add_to_group("interactable")
