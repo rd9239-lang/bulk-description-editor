@@ -1,10 +1,13 @@
 ## ノック音を合成して鳴らす。島民は炭鉱の合図の名残のリズム、妻は普通のリズムで叩く。
+## 帰ってきた男は船の作業の合図で机を叩く。
 class_name Knock
 extends AudioStreamPlayer3D
 
 ## 叩く時刻（秒）
 const ISLAND := [0.0, 0.45, 0.62, 1.1]
 const NORMAL := [0.0, 0.28]
+## 帰ってきた男が机を叩く、船の作業の合図（3回叩いて、2回ぶん止める）
+const SHIP := [0.0, 0.3, 0.6, 1.6]
 const RATE := 22050
 
 static func make_stream(times: Array) -> AudioStreamWAV:
@@ -28,5 +31,5 @@ static func make_stream(times: Array) -> AudioStreamWAV:
 	return wav
 
 func play_rhythm(kind: String) -> void:
-	stream = make_stream(ISLAND if kind == "island" else NORMAL)
+	stream = make_stream(ISLAND if kind == "island" else SHIP if kind == "ship" else NORMAL)
 	play()

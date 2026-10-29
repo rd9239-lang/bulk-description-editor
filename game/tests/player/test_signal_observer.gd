@@ -61,3 +61,21 @@ func test_observed_signal_fires_each_full_watch():
 func test_unknown_cycle_never_records():
 	obs.tick(99999, [&"museum_hi"])
 	assert_eq(state.notebook.size(), 0)
+
+func test_source_added_later_gets_its_cycle():
+	var o := SignalObserver.new()
+	o.notebook = nb
+	add_child(o)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var cam := Camera3D.new()
+	add_child(cam)
+	cam.current = true
+	var taps := FingerTaps.new()
+	taps.signal_id = &"oldman_nigero"
+	add_child(taps)
+	taps.global_position = Vector3(0, 0, -1)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert_gt(o.progress(&"oldman_nigero"), 0.0, "late source is observed")
+	o.queue_free(); cam.queue_free(); taps.queue_free()

@@ -67,8 +67,12 @@ func _process(delta: float) -> void:
 		return
 	var ids: Array = []
 	for src in get_tree().get_nodes_in_group("signal_sources"):
-		if _perceives(cam, src as SignalSource):
-			ids.append((src as SignalSource).signal_id)
+		var s := src as SignalSource
+		if _perceives(cam, s):
+			# あとから置かれた発信元（第2章の老人の指など）も周期を覚える
+			if not _cycle.has(s.signal_id):
+				set_cycle(s.signal_id, s.cycle_length_ms())
+			ids.append(s.signal_id)
 	tick(int(delta * 1000.0), ids)
 
 func _perceives(cam: Camera3D, src: SignalSource) -> bool:

@@ -27,6 +27,7 @@ func test_text_note_hides_by_itself():
 func test_photo_note_waits_for_interact():
 	var img := Image.create(64, 40, false, Image.FORMAT_RGB8)
 	popup.show_note(notes[&"sns_like"], ImageTexture.create_from_image(img))
+	assert_true(popup.is_post_open())
 	await get_tree().create_timer(4.3).timeout
 	assert_true(popup.is_open())
 	var closed := [false]

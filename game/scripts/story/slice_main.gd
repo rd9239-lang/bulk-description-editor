@@ -41,6 +41,8 @@ var flow: ChapterFlow
 var scares: ScareDirector
 var radio: Radio
 var knock: Knock
+var ch2: Chapter2
+var ui_layer: CanvasLayer
 
 var _hud_goal: Label
 var _observe_box: VBoxContainer
@@ -71,6 +73,8 @@ func _ready() -> void:
 	amb.name = "Ambience"
 	add_child(amb)
 	_build_ui()
+	ch2 = Chapter2.new()
+	ch2.setup(self)
 	_show_menu()
 
 # ---------- 組み立て ----------
@@ -426,6 +430,7 @@ func set_player_indoor(entered: bool) -> void:
 func _enter_home() -> void:
 	flow.on_location_entered(&"home")
 	flow.complete(&"go_home")
+	ch2.on_home_entered()
 
 # ---------- UI ----------
 
@@ -443,6 +448,7 @@ func _build_ui() -> void:
 	fx_layer.add_child(fx)
 	add_child(fx_layer)
 	var ui := CanvasLayer.new()
+	ui_layer = ui
 	add_child(ui)
 	_hud_goal = Label.new()
 	_hud_goal.position = Vector2(32, 24)
@@ -555,7 +561,7 @@ func _start(continue_game: bool) -> void:
 	add_child(flow)
 	flow.goal_changed.connect(_on_goal_changed)
 	flow.goal_completed.connect(func(id): scares.on_goal_completed(id))
-	flow.chapter_changed.connect(func(_c): _show_card(tr("ui_chapter1")))
+	flow.chapter_changed.connect(func(c): _show_card(tr("ui_chapter%d" % c)))
 	flow.ending_triggered.connect(func(id): _pending_ending = id)
 	player = PLAYER.instantiate()
 	var idx := int(gs.flags.get("goal_index", 0))
@@ -610,8 +616,6 @@ func _on_signal_observed(id: StringName) -> void:
 
 func _on_goal_changed(goal: StringName) -> void:
 	_hud_goal.text = tr("goal_%s" % goal)
-	if goal == &"slice_end":
-		_show_card(tr("ui_slice_end"), 6.0)
 
 func _on_focus(target: Node) -> void:
 	_hud_prompt.text = tr("ui_interact") if target and _is_active(target) else ""
@@ -633,6 +637,9 @@ func _on_interacted(target: Interactable) -> void:
 	if dialogue.visible or _pending != null or not _is_active(target) or target.dialogue_file == "":
 		return
 	_pending = target
+	# 遺品は調べた時点で拾う（一覧は手帳の「遺品」）
+	if target.relic_id != &"" and Relics.pick(get_node("/root/GameState"), target.relic_id):
+		_show_toast(tr("ui_relic_found") % tr(Relics.defs()[target.relic_id]["name_key"]))
 	if target.knock != "":
 		knock.global_position = target.global_position
 		knock.play_rhythm(target.knock)
@@ -645,9 +652,13 @@ func _on_dialogue_ended(_last: String) -> void:
 	if _pending_ending != &"":
 		_play_ending(_pending_ending)
 		return
-	if _pending and _pending.completes_goal != &"":
-		flow.complete(_pending.completes_goal)
+	var done := _pending
 	_pending = null
+	if done and done.completes_goal != &"":
+		flow.complete(done.completes_goal)
+	# 拾った遺品はその場から消える
+	if done and done.relic_id != &"" and done.relic_id in get_node("/root/GameState").relics_found:
+		done.queue_free()
 
 func _tune_radio() -> void:
 	if dialogue.visible:

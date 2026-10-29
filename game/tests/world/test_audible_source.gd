@@ -57,3 +57,8 @@ func test_observer_counts_finger_taps_only_when_close():
 	s.global_position = Vector3(0, 0, -5)
 	assert_false(obs._perceives(cam, s))
 	obs.queue_free(); cam.queue_free(); s.queue_free()
+
+func test_knock_has_ship_rhythm():
+	assert_eq(Knock.SHIP, [0.0, 0.3, 0.6, 1.6])
+	var w := Knock.make_stream(Knock.SHIP)
+	assert_gt(w.data.size(), int(1.6 * Knock.RATE) * 2)

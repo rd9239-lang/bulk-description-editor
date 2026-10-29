@@ -66,4 +66,8 @@ func _go(next) -> void:
 		ended.emit(last)
 		return
 	_id = str(next)
+	# ノード自体の "set"：そのせりふが出たときに記録する（掲示板を読んだ、など）
+	var node: Dictionary = _nodes[_id]
+	for key in node.get("set", {}):
+		_get_state().set_value(key, node["set"][key])
 	line_changed.emit(current())

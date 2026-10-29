@@ -6,5 +6,6 @@
     {"text_key": "c_secret", "next": "end", "require": {"knows_secret": true}}
   ]},
   "told": {"speaker_key": "spk_wife", "text_key": "t_told", "next": null},
-  "end": {"speaker_key": "spk_wife", "text_key": "t_end", "next": null}
+  "end": {"speaker_key": "spk_wife", "text_key": "t_end", "next": null},
+  "board": {"speaker_key": "spk_none", "text_key": "t_board", "next": null, "set": {"read_board": true}}
 }

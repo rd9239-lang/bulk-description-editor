@@ -72,3 +72,63 @@ ph_sns_like,あなたの投稿に「いいね」がつきました,Someone liked
 ph_sns_post,島の暮らし、最高です。,Island life is the best.
 ui_close_hint,E で閉じる,Press E to close
 sig_sos_a_earphone,イヤホンの雑音,Earphone noise
+spk_old_man,老人,Old man
+spk_returnee,帰ってきた男,The man who came back
+spk_my_mother,母,Mom
+d_ch2_phone_1,机の上でスマホが震えている。,My phone is buzzing on the table.
+d_ch2_phone_2,……住所の変更？　手続きした覚えはない。,...A change of address? I never filed one.
+d_memo,書き置きがある。「母のところへ行ってきます」……妻の字だ。,"A note: ""Gone to see Mom."" ...My wife's handwriting."
+d_ch2_coffee_1,やかんを火にかけて、コーヒーを入れた。,I put the kettle on and made coffee.
+d_ch2_coffee_2,砂糖は二つ。……いつもどおりだ。,Two sugars. ...Same as always.
+d_ch2_watch_1,消えたままの街灯の根元。側溝のふたのすき間に、何か光るものがある。,"At the foot of the dead streetlight, something glints in the gap of the gutter cover."
+d_ch2_watch_2,腕時計だ。裏に名前が彫ってある。……佐伯、洋一。,A wristwatch. There's a name engraved on the back... Yoichi Saeki.
+d_old_man_1,……あんたが、新しく来た人か。,...So you're the new one.
+d_old_man_2,移住支援で来た男は、あんたの前に四人おった。みんな出稼ぎに行ったことになっとる。,"Four men came here on that relocation support before you. Every one of them ""went away to work,"" they say."
+d_old_man_3,坑内の合図はな、音を聞けば誰が打ったか分かった。手の癖は消えん。,"Down in the mine, you could tell who sent a signal just by listening. A hand's habits never go away."
+d_old_man_4,寮に、帰ってきたのがおる。……あれに会えば分かる。,"There's one who came back. He's at the dorm. ...See him, and you'll understand."
+d_old_man_5,島の灯りは、いまも発電所の跡から切ったり点けたりできる。……気をつけなされ。,The island's lights can still be switched from the old power plant. ...Be careful.
+d_returnee_1,（男が指で机を叩いている。三回叩いて、二回ぶん止める。また三回）,"(He's tapping the table. Three taps, two beats of silence. Three again.)"
+c_ask_name,名前を聞く,Ask his name
+c_ask_from,どこから来たのか聞く,Ask where he came from
+c_ask_life,島の暮らしについて聞く,Ask about life on the island
+d_returnee_name,名前……　……名前……,Name... ...name...
+d_me_call_17,（作業着の胸に「17」と縫い付けてある）……17番、さん？,"(A ""17"" is sewn onto his overalls.) ...Number 17?"
+d_returnee_yes,はい。,Yes.
+d_returnee_sea,海です。ずっと、海。,The sea. Always the sea.
+d_returnee_wife,ここの暮らし、いいでしょう。奥さん、優しいでしょう。……おれのも、優しかった。,"Life here is nice, isn't it. Your wife is kind, isn't she. ...Mine was kind too."
+d_returnee_end,17番、作業に戻ります。,"Number 17, returning to work."
+d_board,「移住支援　ご入居の皆さま」。名前が四つ。佐伯、村井、高田、野々村。どの名前の横にも「転出」の判が押してある。,"""Relocation Support — Residents."" Four names: Saeki, Murai, Takada, Nonomura. Every one is stamped MOVED OUT."
+d_ch2_letter_1,机の上に、封をしたままの手紙がある。宛名は「母さんへ」。,"There's a sealed letter on the desk, addressed ""To Mom."""
+d_ch2_letter_2,「こっちの暮らしは順調です。妻もよくしてくれます。ただ、夜になると窓の外の街灯が、何か言っているように見えるのです」　村井,"""Life here is going well. My wife takes good care of me. Only, at night, the streetlight outside my window seems to be trying to say something."" —Murai"
+d_ch2_letter_3,……この人も、あの点滅を見ていた。,...He saw that blinking too.
+d_call_1,（母に電話をかけた）……もしもし、母さん。元気でやってるよ。,"(I called Mom.) ...Hi, Mom. I'm doing fine."
+d_call_2,日曜の夜は、いつも電話くれるね。そっちはどう？,You always call on Sunday nights. How is it over there?
+d_call_3,うん、静かでいいところだよ。……じゃあ、また。,"Yeah, it's quiet. A nice place. ...Talk soon."
+d_call_4,はいはい、五分だけね。いつもそう。おやすみ。,"Sure, five minutes as usual. Always the same. Good night."
+d_switchboard,街灯の系統の札が並んでいる。……一本だけ、「坑内線」と書かれた古い線がつながっている。,"Rows of labels for the streetlight circuits. ...One old cable is marked ""MINE LINE."""
+d_me_switchboard,坑道の中から来ている線……？　……イヤホンから、雑音がする。,A line coming up from inside the mine...? ...There's static in my earphones.
+d_ch2_nametag,ロッカーの中に、作業着が一着。胸の名札に「移住支援　高田」。,"A set of overalls hangs in the locker. The name tag reads ""Relocation Support — Takada."""
+d_follow_1,17番、作業に戻ります。,"Number 17, returning to work."
+d_follow_2,あなたは、何番ですか。,What's your number?
+d_follow_3,奥さん、待ってますよ。,Your wife is waiting for you.
+d_follow_4,……網、重いですね。,"...The nets are heavy, aren't they."
+d_returnee_back,17番、戻りました。,"Number 17, back."
+d_window_ch2,窓の外を見る。路地の突き当たりで、青白い街灯が点いている。,"I look out the window. At the end of the alley, the pale streetlight is on."
+d_me_photo,……これ、いま撮られてる。,...This was taken just now.
+d_me_photo_2,窓の外を見る。路地には、誰もいない。,I look outside. There's no one in the alley.
+goal_ch2_phone,机のスマホを見る,Check the phone on the table
+goal_ch2_coffee,台所でコーヒーを入れる,Make coffee in the kitchen
+goal_ch2_dead_lamp,消えたままの街灯を調べる,Examine the streetlight that never comes on
+goal_ch2_old_man,港の老人に話を聞く,Talk to the old man at the harbor
+goal_ch2_dorm,東の寮を訪ねる,Visit the dormitory to the east
+goal_ch2_ruins,炭鉱住宅の廃墟を調べる（掲示板と部屋）,Search the ruined miners' row houses (notice board and room)
+goal_ch2_call_mother,家に帰って母に電話する,Go home and call Mom
+goal_ch2_power_plant,発電所跡を調べる,Search the old power plant
+goal_ch2_earphone,古い線のそばで、イヤホンの音を聞いて記録する,Stand by the old cable and record what's in your earphones
+goal_ch2_window,家に帰り、窓の外を確かめる,Go home and look out the window
+goal_ch2_end,,
+ui_chapter2,第二章　前の移住者,Chapter 2: The Previous Settlers
+ui_that_night,その夜,That night
+ui_ch2_end,第二章　おわり　―つづく―,End of Chapter 2 — to be continued
+ui_relic_found,遺品を見つけた：%s,Found a belonging: %s
+ui_east_open,東の道の工事柵が外されている,The barrier on the east road has been taken down

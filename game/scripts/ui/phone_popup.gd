@@ -64,6 +64,10 @@ func _label(parent: Control, font_size: int, color: Color) -> Label:
 func is_open() -> bool:
 	return _banner.visible or _post.visible
 
+## 写真つきの投稿が開いているか
+func is_post_open() -> bool:
+	return _post.visible
+
 func show_note(note: Dictionary, photo: Texture2D = null) -> void:
 	if _vibrate.stream:
 		_vibrate.play()

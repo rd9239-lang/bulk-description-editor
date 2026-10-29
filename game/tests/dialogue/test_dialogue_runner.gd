@@ -42,3 +42,7 @@ func test_null_next_ends():
 	dr.advance()
 	assert_eq(ended[0], "told")
 	assert_true(dr.current().is_empty())
+
+func test_node_can_set_flag_when_shown():
+	dr.start("res://tests/fixtures/dialogue_test.json", "board")
+	assert_eq(state.flags.get("read_board"), true)
