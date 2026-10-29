@@ -3,7 +3,7 @@ ui_title,街灯のSOS,Streetlight SOS
 sig_sos_a,窓の外の街灯,Streetlight outside the window
 sig_museum_hi,資料館の展示,Museum exhibit
 sig_oldman,老人の指,The old man's fingers
-nb_sep,：,": "
+nb_sep,：,: 
 nb_title,信号手帳,Signal Notebook
 nb_decode_hint,解読した文字を入力,Type your decoding
 sig_sos_a_radio,ラジオの雑音,Radio static
@@ -56,3 +56,18 @@ ui_recorded,手帳に記録した（N）,Recorded in notebook (N)
 ui_radio_on,ラジオの電源を入れた,Radio switched on
 d_notice_sos,……規則的だ。短く3回、長く3回、また短く3回。,"...It's regular. Three short, three long, three short again."
 goal_find_regular_lamp,窓から見えた、規則的に点滅する街灯を探して記録する,Find and record the steadily blinking streetlight you saw from the window
+nb_signals,信号,Signals
+nb_relics,遺品,Belongings
+nb_phone,スマホ,Phone
+relic_watch,止まった腕時計,A stopped wristwatch
+relic_watch_desc,裏に「佐伯 洋一」と刻まれている。針は九時十二分で止まっている。,"Engraved on the back: ""Yoichi Saeki."" The hands stopped at 9:12."
+relic_letter,出しそびれた母への手紙,An unsent letter to his mother
+relic_letter_desc,「こっちの暮らしは順調です。妻もよくしてくれます。ただ、夜になると窓の外の街灯が、何か言っているように見えるのです」　村井,"""Life here is going well. My wife takes good care of me. Only, at night, the streetlight outside my window seems to be trying to say something."" —Murai"
+relic_nametag,作業着の名札,A name tag from work overalls
+relic_nametag_desc,「移住支援　高田」。ロッカーの作業着に縫い付けられたまま、ほこりをかぶっている。,"""Relocation Support — Takada."" Still sewn to overalls in the locker, under a layer of dust."
+ph_bank,しおかぜ銀行,Shiokaze Bank
+ph_bank_address,ご登録住所の変更を受け付けました。,We have received your change of registered address.
+ph_sns,SNS,Social
+ph_sns_like,あなたの投稿に「いいね」がつきました,Someone liked your post
+ph_sns_post,島の暮らし、最高です。,Island life is the best.
+ui_close_hint,E で閉じる,Press E to close

@@ -1,4 +1,5 @@
 ## 信号手帳。記録は GameState.notebook に翻訳キーで保存し、表示のたびに翻訳する。
+## 信号のほかに、拾った遺品と届いたスマホの通知も一覧にする（どちらもIDで保存し、表示のたびに翻訳）。
 class_name Notebook
 extends Control
 
@@ -108,6 +109,7 @@ func _rebuild() -> void:
 	title.text = tr("nb_title")
 	title.add_theme_font_size_override("font_size", 32)
 	_list.add_child(title)
+	_heading("nb_signals")
 	for entry in _get_state().notebook:
 		var label := Label.new()
 		label.text = entry_text(entry)
@@ -123,6 +125,39 @@ func _rebuild() -> void:
 			var id: StringName = entry["signal_id"]
 			input.text_submitted.connect(func(t): try_manual_decode(id, t))
 			_list.add_child(input)
+	_heading("nb_relics")
+	var relics := Relics.defs()
+	for id in _get_state().relics_found:
+		if relics.has(id):
+			_line(tr(relics[id]["name_key"]) + tr("nb_sep") + tr(relics[id]["desc_key"]))
+	_heading("nb_phone")
+	var notes := PhoneFeed.load_notes(PhoneFeed.PATH)
+	for id in _get_state().phone:
+		if notes.has(id):
+			_line(tr(notes[id]["sender_key"]) + tr("nb_sep") + tr(notes[id]["text_key"]))
+
+func _heading(key: String) -> void:
+	var h := Label.new()
+	h.text = tr(key)
+	h.add_theme_font_size_override("font_size", 26)
+	h.add_theme_color_override("font_color", Color(0.9, 0.78, 0.45))
+	_list.add_child(h)
+
+func _line(text: String) -> void:
+	var l := Label.new()
+	l.text = text
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.add_theme_font_size_override("font_size", 20)
+	_list.add_child(l)
+
+## いま表示している文字（見出し・各行）
+func lines() -> PackedStringArray:
+	var out := PackedStringArray()
+	if _list:
+		for c in _list.get_children():
+			if c is Label and not c.is_queued_for_deletion():
+				out.append((c as Label).text)
+	return out
 
 ## timeline を横棒で描く
 class _Waveform extends Control:

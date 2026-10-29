@@ -45,3 +45,33 @@ func test_recorded_signal_emitted():
 	nb.record(&"sos_a")
 	nb.record(&"sos_a")
 	assert_eq(got, [&"sos_a"])
+
+func test_shows_section_headings():
+	add_child(nb)
+	nb._rebuild()
+	var text := "\n".join(nb.lines())
+	for k in ["nb_signals", "nb_relics", "nb_phone"]:
+		assert_true(text.contains(tr(k)), k)
+
+func test_shows_relics_and_phone():
+	state.relics_found = [&"watch"] as Array[StringName]
+	state.phone = [&"bank_address"] as Array[StringName]
+	add_child(nb)
+	nb._rebuild()
+	var text := "\n".join(nb.lines())
+	assert_true(text.contains(tr("relic_watch")))
+	assert_true(text.contains(tr("relic_watch_desc")))
+	assert_true(text.contains(tr("ph_bank_address")))
+
+func test_language_switch_retranslates():
+	state.relics_found = [&"watch"] as Array[StringName]
+	add_child(nb)
+	TranslationServer.set_locale("en")
+	nb._rebuild()
+	var en := "\n".join(nb.lines())
+	TranslationServer.set_locale("ja")
+	nb._rebuild()
+	var ja := "\n".join(nb.lines())
+	assert_ne(en, ja)
+	assert_true(ja.contains("腕時計"))
+	assert_true(en.contains("wristwatch"))
